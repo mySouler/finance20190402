@@ -32,7 +32,7 @@
           <div class="radios">
               <el-checkbox v-model="checked">记住密码</el-checkbox>
           </div>
-          <button @click="submitFormData" :class="{activeLogin:login}">登 录</button>
+          <button @click="loginBtn" :class="{activeLogin:login}">登 录</button>
           
         </div>
         <!-- <el-form :model="formData" status-icon :rules="rules" ref="formData" label-width="0" class="demo-formData">
@@ -53,8 +53,8 @@
 </template>
 
 <script>
-  import Qs from 'qs'
-
+  import {finance_login} from "@/http/api"
+  
   export default {
     name: 'Login',
     data () {
@@ -70,7 +70,8 @@
       };
     },
     methods: {
-      submitFormData: function (formName){
+      loginBtn: function (){
+        let that = this
         if(this.username.length==0){
           this.rules.username = "请输入用户名"
           return
@@ -79,35 +80,36 @@
           this.rules.password = "请输入密码"
           return
         }
+        let parmams ={}
+        parmams.username = this.username 
+        parmams.password = this.password
+        console.log(parmams)
+        finance_login(this.$qs.stringify(parmams)).then((res)=>{
+          console.log(res,'res')
+          if(res.code == 200 ){
 
+            this.$store.state.loginInfo = res.result.userInfo
+            this.$store.state.loginInfo.token = res.result.token
+            sessionStorage.setItem('token',res.result.token)
 
-        this.$router.push('./index')
-        return
-
-        let _that = this
-        this.$refs[formName].validate((valid) => {
-        if (valid) {
-          let dataF = Qs.stringify(this.formData)
-          _that.$http.post('/api/sys/login/restful',dataF,{headers:{'Content-Type':'application/x-www-form-urlencoded'}})
-            .then(res=>{
-              if(res.status===200){
-                let data=res.data
-                if(data.code===200){
-                  _that.$store.dispatch("getAdminData",{token:res.data.token,formData:_that.formData,rolecode:res.data.rolecode})
-                  _that.$message.success("登录成功!!！")
-                _that.$router.push('/indexpage/index')
-                }else {
-                  _that.$message.error("账号密码错误，请重新填写")
-                }
-              }else{
-                _that.$message.error("账号密码错误，请重新填写")
-              }
+            that.$message({
+              type: 'success',
+              message: '登录成功'
             })
-            .catch(err=>{
-              _that.$message.error("账号密码错误，请重新填写")
+            that.$router.push('/index')
+          
+          }else{
+            that.$message({
+              type: 'error',
+              message: res.message
             })
-        }
-      });
+          }
+
+        }).catch(()=>{
+
+        })
+        // that.$message
+        
       },
       resetForm (formName) {
         this.$refs[formName].resetFields()

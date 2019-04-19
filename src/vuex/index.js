@@ -7,9 +7,8 @@ Vue.use(Vuex)
 
 
 const state = {
-    login:{
-        name:"login",
-        token:'',
+    loginInfo:{
+        
     }
 };
 const mutations = {

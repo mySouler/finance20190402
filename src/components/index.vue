@@ -14,13 +14,13 @@
           active-text-color="#fff"
           router
         >
-          <el-submenu  router="item" v-for="(item,index) in menuList" :key="item.id" :index="item.menuname">
+          <el-submenu  router="item" v-for="(item,index) in menuList" :key="item.id" :index="item.name">
             <template slot="title">
               <i class="el-icon-location"></i>
-              <span>{{item.menuname}}</span>
+              <span>{{item.name}}</span>
             </template>
             <el-menu-item-group >
-              <el-menu-item v-for="(key,index) in item.list2" :key="key.id" @click="addTab(key.menuname,key.menuurl)"   :index="key.menuurl">{{key.menuname}}</el-menu-item>
+              <el-menu-item v-for="(key,index) in item.children" :key="key.id" @click="addTab(key.name,key.url)"   :index="key.url">{{key.name}}</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
         </el-menu>
@@ -31,9 +31,10 @@
               <el-button size="small"  @click="openMenu">开关</el-button>
             </el-tooltip>
             <div class="loginInfo">
-              <span>cuidongdong</span>
+              {{$store.state.loginInfo}}
+              <span>{{$store.state.loginInfo.username}}</span>
               <span>按钮</span>
-              <span><img src="../assets/close.png" alt=""></span>
+              <span @click="loginOut"><img src="../assets/close.png" alt=""></span>
             </div>
             
             
@@ -63,6 +64,8 @@
 
 <script>
 import{ mapState,mapGetters } from "vuex"
+import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
+
   export default {
     name: "index",
     data() {
@@ -86,9 +89,38 @@ import{ mapState,mapGetters } from "vuex"
       let name = this.$route.name
       let path = this.$route.path
       this.addTab(name,path)
-
+      this.menuListFun()   //菜单
     },
     methods: {
+      loginOut(){
+        let that = this
+        console.log('退出')
+        finance_loginOut().then((res)=>{
+          console.log(res,'res')
+          if(res.code == 200 ){
+            
+            that.$message({
+              type: 'success',
+              message: '退出成功'
+            })
+            that.$router.push('/')
+            sessionStorage.removeItem('token')
+          }else{
+          
+          }
+
+        }).catch((error)=>{
+          console.log(error)
+        })
+      },
+      menuListFun(){
+        finance_menuList().then((data)=>{
+          console.log(data,'----')
+          if(data.success){
+            this.$store.state.menuNav.menuList = data.result
+          }
+        })
+      },
       openMenu(){
         this.isCollapse = !this.isCollapse
         

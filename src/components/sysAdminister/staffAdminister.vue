@@ -22,12 +22,10 @@
         <div class="item orderTable  bgc_white mt_20">
             <el-table :data="listArray.rows" style="width: 100%;" border @selection-change="handleSelectionChange">
                 <el-table-column prop="purusername" label="采购员"></el-table-column>
-                <el-table-column prop="hintskunum" label="智能采购提示采购sku数"></el-table-column>
-                <el-table-column prop="purchasenum" label="智能采购生成批次的sku数"></el-table-column>
-                <el-table-column prop="notskunum" label="不采购通过的sku数"></el-table-column>
-                <el-table-column prop="purchasework" label="采购效率"></el-table-column>
-                <el-table-column prop="notoperatedskunum" label="未操作sku数"></el-table-column>
-                <el-table-column prop="create_time" label="统计时间"></el-table-column>
+                <el-table-column prop="hintskunum" label="部门"></el-table-column>
+                <el-table-column prop="purchasenum" label="岗位"></el-table-column>
+                <el-table-column prop="notskunum" label="状态"></el-table-column>
+                <el-table-column prop="purchasework" label="操作"></el-table-column>
             </el-table>
             <div v-if="listArray&&listArray.rows&&listArray.rows.length>0" class="pagination">
                 <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="listArray.pageOn" :page-sizes="[10,20,50,100]" :page-size="listArray.limit" :total="listArray.total" layout="total, sizes, prev, pager, next, jumper">
@@ -75,6 +73,24 @@
     </div>
 </template>
 <script>
+    import {finance_saffList,finance_queryTreeList} from "@/http/api"
+
+    // "avatar": "string",
+    //     "birthday": "2019-04-19T09:16:54.378Z",
+    //     "createBy": "string",
+    //     "createTime": "2019-04-19T09:16:54.378Z",
+    //     "delFlag": "string",
+    //     "email": "string",
+    //     "id": "string",
+    //     "password": "string",
+    //     "phone": "string",
+    //     "realname": "string",
+    //     "salt": "string",
+    //     "sex": 0,
+    //     "status": 0,
+    //     "updateBy": "string",
+    //     "updateTime": "2019-04-19T09:16:54.378Z",
+    //     "username": "string"
     export default {
         data() {
             return {
@@ -85,8 +101,9 @@
                 limit:10
                 },
                 listArray:{
-                rows:[],
+                    rows:[],
                 },
+                status:false,
                 currentPage3:'1',
                 add:false,
                 department: [{
@@ -114,8 +131,22 @@
         created() {
         },
         mounted() {
+            this.saffInit();
         },
         methods: {
+            saffInit(){
+                finance_saffList().then((data)=>{
+                    console.log(data,'data')
+
+                })
+                finance_queryTreeList().then((data)=>{
+                    console.log(data,'部门列表')
+
+                })
+            },
+            handleSelectionChange(){
+                
+            },
             getTime(date){ //获取时间格式
                 console.log(date,'time')
                 if(date){

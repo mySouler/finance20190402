@@ -15,16 +15,13 @@ export default new Router({
       name: 'index',
       component:  resolve => require(['@/components/index'],resolve),
       children:[
+        
         {
-          path:"SmartPurchasing",
-          name: 'SmartPurchasing',
+          path:"/isystem/user",
+          name: 'user',
           component:  resolve => require(['@/components/sysAdminister/staffAdminister'],resolve),
         },
-        {
-          path:"Employee",
-          name: 'Employee',
-          component:  resolve => require(['@/components/sysAdminister/staffAdminister'],resolve),
-        }
+        
       ]
     },
   ]

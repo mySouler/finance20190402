@@ -22,7 +22,7 @@
                   <span>
                     <img src="../assets/pwd.png" alt="">
                   </span>
-                  <input type="password" v-model="password" placeholder="请输入密码"  >
+                  <input @keyup.enter="loginBtn()" type="password" v-model="password" placeholder="请输入密码"  >
               </label>
               <p>
                 {{rules.password}}
@@ -91,12 +91,14 @@
             this.$store.state.loginInfo = res.result.userInfo
             this.$store.state.loginInfo.token = res.result.token
             sessionStorage.setItem('token',res.result.token)
+            sessionStorage.setItem('userInfo', JSON.stringify(res.result.userInfo))
 
             that.$message({
               type: 'success',
               message: '登录成功'
             })
             that.$router.push('/index')
+            
           
           }else{
             that.$message({

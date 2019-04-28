@@ -4,8 +4,8 @@ import Vue from 'vue'
 import router from './router'
 import ElementUI from 'element-ui';
 import store from './vuex'
-import '../static/css/base.css'
 import 'element-ui/lib/theme-chalk/index.css';
+import '../static/css/base.css'
 import 'babel-polyfill'
 import axios from 'axios'
 import App from './App'
@@ -23,12 +23,20 @@ axios.defaults.baseURL = 'http://192.168.16.54:8088/hz-finance';
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-
+let pending = []; //声明一个数组用于存储每个ajax请求的取消函数和ajax标识
+let cancelToken = axios.CancelToken;
+let removePending = (config) => {
+  for(let p in pending){
+    if(pending[p].u === config.url + '&' + config.method) { //当当前请求在数组中存在时执行函数体
+      pending[p].f(); //执行取消操作
+      pending.splice(p, 1); //把这条记录从数组中移除
+    }
+  }
+}
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
-  console.log(config,'configconfigconfig')
-  
+  removePending(config); 
   let token = sessionStorage.getItem('token')
   if (token) {
     config.headers['X-Access-Token'] = token
@@ -42,7 +50,7 @@ axios.interceptors.request.use(function (config) {
 
 // 响应
 axios.interceptors.response.use(function (response) {
-
+  removePending(response.config); 
   const data = response.data;
 
   return data

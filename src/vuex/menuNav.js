@@ -2,10 +2,10 @@
 export default {
     state: {
         menuList:  [],
-        editableTabsValue2: '/index',
+        editableTabsValue2: '/index/home',
         editableTabs2: [{
             title: '首页',
-            name: '/index',
+            path: '/index/home',
             content:"",
         }],
         
@@ -16,21 +16,19 @@ export default {
     },
     mutations: {
         addTab(state,value) {
+            console.log(value,'router="item" ')
             let include = state.editableTabs2.some((item)=>{
-                return item.name == value.path
+                return item.path ==  value.path
             })
             console.log(include,'include')
             if(!include){
-                let newTabName = ++state.tabIndex + '';
                 state.editableTabs2.push({
                     title:value.name,
-                    name: value.path,
+                    path: value.path,
                 });
-                state.editableTabsValue2 = value.path;
-            }else{
-                state.editableTabsValue2 = value.path;
             }
-            console.log(state.editableTabs2,state.editableTabsValue2)
+            state.editableTabsValue2 =  value.path
+            console.log('editableTabs2',state.editableTabs2)
         },
         removeTab(state,targetName) {
             console.log(targetName,'targetName')
@@ -39,19 +37,22 @@ export default {
             let activeName = state.editableTabsValue2;
             if (activeName === targetName) {
                 tabs.forEach((tab, index) => {
-                    if (tab.name === targetName) {
+                    if (tab.path === targetName) {
                         let nextTab = tabs[index + 1] || tabs[index - 1];
                         if (nextTab) {
-                            activeName = nextTab.name;
+                            activeName = nextTab.path;
                         }
                     }
                 });
             }
-            
             state.editableTabsValue2 = activeName;
             console.log(activeName,'activeName')
-            state.editableTabs2 = tabs.filter(tab => tab.name !== targetName);
+            state.editableTabs2 = tabs.filter(tab => tab.path !== targetName);
 
+            if(state.editableTabs2.length == 0){
+                
+                state.editableTabsValue2 = ""
+            }
         }
     },
     actions:{

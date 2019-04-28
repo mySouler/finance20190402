@@ -1,60 +1,67 @@
 <template>
   
     <section class="el-container warp">
+      
         <aside class="menuNav">
         <el-menu
           :collapse="isCollapse"
-          :default-active="$route.path"
+          :default-active="routeName"
           @open="handleOpen"
           @close="handleClose"
+          @select="select"
           unique-opened
           class="el-menu-vertical-demo "
           background-color="transparent"
           text-color="#9c9eae"
           active-text-color="#fff"
-          router
         >
-          <el-submenu  router="item" v-for="(item,index) in menuList" :key="item.id" :index="item.name">
+          <img v-show="!isCollapse" src="../assets/logo.png" alt="">
+          <el-submenu  v-for="(item,index) in menuList" :key="item.id" :index="item.name">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>{{item.name}}</span>
             </template>
             <el-menu-item-group >
-              <el-menu-item v-for="(key,index) in item.children" :key="key.id" @click="addTab(key.name,key.url)"   :index="key.url">{{key.name}}</el-menu-item>
+              <el-menu-item v-for="(key,index) in item.children" :key="key.id" @click="addTab(key.name,key.url)"   :index="key.url">
+                {{key.name}}
+              </el-menu-item>
             </el-menu-item-group>
+            <!-- <el-submenu :index="item.children.url">
+              <template slot="title">{{}}</template>
+              <el-menu-item index="1-4-1">选项1</el-menu-item>
+            </el-submenu> -->
           </el-submenu>
         </el-menu>
         </aside>
       <div class="el-container is-vertical">
           <el-header>
             <el-tooltip class="item" effect="dark" content="显示或隐藏左侧按钮" placement="bottom">
-              <el-button size="small"  @click="openMenu">开关</el-button>
+              <el-button class="menuIcon" size="small" @click="openMenu">
+                  <img src="../assets/home.png" alt="">
+              </el-button>
             </el-tooltip>
             <div class="loginInfo">
-              {{$store.state.loginInfo}}
-              <span>{{$store.state.loginInfo.username}}</span>
-              <span>按钮</span>
+              <span>{{userName}}</span>
+              <span><img src="../assets/xiaoxi.png" alt=""></span>
               <span @click="loginOut"><img src="../assets/close.png" alt=""></span>
             </div>
             
             
           </el-header>
-
-          <el-tabs v-model="$store.state.menuNav.editableTabsValue2" type="card"  @tab-click="chooseTab($store.state.menuNav.editableTabsValue2)" closable @tab-remove="removeTab">
+          
+          <el-tabs :value="routeName" type="card"  @tab-click="chooseTab" closable @tab-remove="removeTab">
             <el-tab-pane
-      
               v-for="item in editableTabs2"
-              :key="item.name"
+              :key="item.path"
               :label="item.title"
-              :name="item.name"
+              :name="item.path"
+            
             >
-              <el-main>
-                <div style="padding: 20px;background-color: #f9f9f9" id="load_warp">
-                  <router-view></router-view>
-                </div>
-              </el-main>
             </el-tab-pane>
           </el-tabs>
+          <div style="padding: 20px;background-color: #f9f9f9" id="load_warp">
+            <router-view  :name="currentTab" ></router-view>
+          </div>
           
       </div>
     </section>
@@ -75,23 +82,32 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
         
       }
     },
-    created() {},
+    created() {
+        // window.location.reload()
+
+        console.log('$route.path',this.$route)
+        let name = this.$route.name
+        let path = this.$route.path
+        this.menuListFun()   //菜单
+    },
     computed:{
         ...mapState({
             menuList:state=>state.menuNav.menuList,
             editableTabs2:state=>state.menuNav.editableTabs2,
-            // editableTabsValue2:state=>state.menuNav.editableTabsValue2,
-            tabIndex:state=>state.menuNav.tabIndex
-        })
+            tabIndex:state=>state.menuNav.tabIndex,
+            userName:state=> JSON.parse(sessionStorage.getItem('userInfo')).username || state.loginInfo && state.loginInfo.userInfo.username,
+            routeName:state=>state.menuNav.editableTabsValue2,
+            currentTab:state=> state.menuNav.editableTabsValue2.substring(state.menuNav.editableTabsValue2.lastIndexOf('/')+1)
+        }),
+        
     },
     mounted() {
-      console.log('$route.path',this.$route)
-      let name = this.$route.name
-      let path = this.$route.path
-      this.addTab(name,path)
-      this.menuListFun()   //菜单
+      
     },
     methods: {
+      select(row){
+        console.log(row,'select')
+      },
       loginOut(){
         let that = this
         console.log('退出')
@@ -105,6 +121,9 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
             })
             that.$router.push('/')
             sessionStorage.removeItem('token')
+            sessionStorage.removeItem('userInfo')
+            
+
           }else{
           
           }
@@ -126,7 +145,8 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
         
       },
       chooseTab(val){
-        this.$router.push(val)
+        this.$store.state.menuNav.editableTabsValue2 = val.name
+        console.log(val,'--')
         console.log('选中了')
 
       },
@@ -140,14 +160,13 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
         console.log(name,path,'target')
         let obj = {
           name,
-          path
+          path,
+          router:this.$router,
         }
         this.$store.commit('addTab',obj)
       },
       removeTab(target){
         this.$store.commit('removeTab',target)
-        this.$router.push(this.$store.state.menuNav.editableTabsValue2)
-        
       },
     }
   };
@@ -214,6 +233,11 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
     height:12px;
   >>>.el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow:before
     background url(../assets/jian.png) center center no-repeat;
+  >>>.menuIcon
+    border:none;
+    padding: 9px 0px
+  >>>.menuIcon:hover,>>>.menuIcon:focus
+    background none
 
 </style>
 

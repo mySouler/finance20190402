@@ -212,15 +212,15 @@
         color #fff;
         border:none;
         outline none
-        background: -webkit-linear-gradient(left,#45d5e7,#4cecc6); /* Safari 5.1 - 6.0 */
-        background: -o-linear-gradient(left,#45d5e7,#4cecc6); /* Opera 11.1 - 12.0 */
-        background: -moz-linear-gradient(left,#45d5e7,#4cecc6); /* Firefox 3.6 - 15 */
-        background: linear-gradient(left,#45d5e7,#4cecc6); /* 标准的语法 */  
+        background: -webkit-linear-gradient(to left,#45d5e7,#4cecc6); /* Safari 5.1 - 6.0 */
+        background: -o-linear-gradient(to left,#45d5e7,#4cecc6); /* Opera 11.1 - 12.0 */
+        background: -moz-linear-gradient(to left,#45d5e7,#4cecc6); /* Firefox 3.6 - 15 */
+        background: linear-gradient(to left,#45d5e7,#4cecc6); /* 标准的语法 */  
       button.activeLogin  
-        background: -webkit-linear-gradient(left,#16cae1,#1fe7b8); /* Safari 5.1 - 6.0 */
-        background: -o-linear-gradient(left,#16cae1,#1fe7b8); /* Opera 11.1 - 12.0 */
-        background: -moz-linear-gradient(left,#16cae1,#1fe7b8); /* Firefox 3.6 - 15 */
-        background: linear-gradient(left,#16cae1,#1fe7b8); /* 标准的语法 */  
+        background: -webkit-linear-gradient(to left,#16cae1,#1fe7b8); /* Safari 5.1 - 6.0 */
+        background: -o-linear-gradient(to left,#16cae1,#1fe7b8); /* Opera 11.1 - 12.0 */
+        background: -moz-linear-gradient(to left,#16cae1,#1fe7b8); /* Firefox 3.6 - 15 */
+        background: linear-gradient(to left,#16cae1,#1fe7b8); /* 标准的语法 */  
   .radios
     margin:-12px 0 42px;
     text-align left;

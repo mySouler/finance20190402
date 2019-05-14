@@ -23,7 +23,13 @@
                 @current-change="CurrentChange" border @selection-change="handleSelectionChange">
                 <el-table-column  prop="name" label="菜单名称"></el-table-column>
                 <el-table-column  prop="url" label="资源路径"></el-table-column>
-                <el-table-column  prop="alwaysShow" label="状态"></el-table-column>
+                <el-table-column label="状态">
+                    <template slot-scope="scope" >
+                        <div >
+                            {{scope.row.alwaysShow == 1 ? "开启" : "关闭"}}
+                        </div>
+                    </template>
+                </el-table-column>
                 <el-table-column  prop="purchasework" label="操作">
                     <template >
                         <div>

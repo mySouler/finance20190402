@@ -125,7 +125,9 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
             
 
           }else{
-          
+
+            this.$message.error("退出失败")
+
           }
 
         }).catch((error)=>{
@@ -161,7 +163,6 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
         let obj = {
           name,
           path,
-          router:this.$router,
         }
         this.$store.commit('addTab',obj)
       },
@@ -177,7 +178,7 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
   
   .menuNav
     background: #253744;
-    height:100%;
+    
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
     min-height: 400px;

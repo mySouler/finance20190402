@@ -33,43 +33,44 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div v-if="roleData.records && roleData.records.length>0" class="pagination">
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="roleData.pageOn" :page-sizes="[10,20,50,100]" :page-size="roleData.limit" :total="roleData.total" layout="total, sizes, prev, pager, next, jumper">
-                </el-pagination>
-            </div>
+            <pageTool :pageData="roleData"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
+            
         </div>
+        <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <strong>{{fileName}}</strong>
+        </downUp>
 
         <el-dialog
         title="新增"
         :visible.sync="add"
         width="20%"
         center>
-        <el-form :inline="true" :model="sendData" :rules="rules" ref="ruleForm" class="demo-form-inline text-left" label-width="110px">
-        <el-form-item label="用户名">
-            <el-input  v-model.trim="sendData.username" ></el-input>
-        </el-form-item>
-      
-        <el-form-item label="岗位"  prop="" >
-            <el-input v-model.trim="sendData.sendData" ></el-input>
-        </el-form-item>
-        <el-form-item label="状态" prop="" >
-            <el-radio v-model="sendData.status" label="1">启用</el-radio>
-            <el-radio v-model="sendData.status" label="2">停用</el-radio>
-        </el-form-item>
-    
-        </el-form>
-
-
-    <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="updateData()">确 定</el-button>
-        <el-button @click="add = false">取 消</el-button>
-    </span>
-    </el-dialog>
+            <el-form :inline="true" :model="sendData" :rules="rules" ref="ruleForm" class="demo-form-inline text-left" label-width="110px">
+                <el-form-item label="用户名">
+                    <el-input  v-model.trim="sendData.username" ></el-input>
+                </el-form-item>
+                <el-form-item label="岗位"  prop="" >
+                    <el-input v-model.trim="sendData.sendData" ></el-input>
+                </el-form-item>
+                <el-form-item label="状态" prop="" >
+                    <el-radio v-model="sendData.status" label="1">启用</el-radio>
+                    <el-radio v-model="sendData.status" label="2">停用</el-radio>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="updateData()">确 定</el-button>
+                <el-button @click="add = false">取 消</el-button>
+            </span>
+        </el-dialog>
     
     </div>
 </template>
 <script>
-    import {finance_userRole} from "@/http/api"
+    import {finance_userRole,finance_departmens} from "@/http/api"
+    import pageTool from "@/components/commonTool/pageTool";
+    import downUp from "@/components/commonTool/down_up_xlsx";
+
+
     export default {
         data() {
             return {
@@ -84,6 +85,16 @@
                 add:false,
                 rules:{},
                 department:{},
+                sendData:{
+                    href:"",
+                    url:"",
+                    sendtype:"",
+                    title:'',
+                    downPath:"",
+                },
+                visible:false,
+                fileName:"分类平台费.xls",
+                multipleSelection:[]
             }
         },
         created() {
@@ -92,12 +103,13 @@
         },
         mounted() {
         },
+        components:{
+            pageTool,
+            downUp
+        },
         methods: {
             CurrentChange(val){
                 this.currentRow = val;
-            },
-            handleCurrentChange(){
-
             },
             edit(){
                 console.log('edit')
@@ -106,8 +118,31 @@
                 console.log('power')
 
             },
-            handleSizeChange(){
-
+            getPage(val){
+                console.log(val,'getPage');
+                this.pageData.current = val
+            },
+            getSize(val){
+                console.log(val,'getSize');
+                this.pageData.size = val
+            },
+            handleSelectionChange(val){
+                this.multipleSelection=[]
+                val.map((v)=>{
+                    this.multipleSelection.push( `'${v.serial}'`)
+                })
+				console.log("TCL: handleSelectionChange -> this.multipleSelection", this.multipleSelection)
+                
+            },
+            async getDepart(){
+                try{
+                    let data = await finance_departmens();
+                    if(data.success){
+                        console.log(data,'roleInfo')
+                    }
+                }catch(err){
+                    console.log(err)
+                }
             },
             async roleInfo(){
                 try{
@@ -119,18 +154,6 @@
                 }catch(err){
                     console.log(err)
                 }
-            },
-            handleSelectionChange(){
-                
-            },
-            getTime(date){ //获取时间格式
-                console.log(date,'time')
-                if(date){
-                return date[0]+'*'+date[1]
-                }
-            },
-            onSubmit(){
-
             },
             resetForm: function () { // 清空表单条件
                 for (let key in this.formData) {

@@ -11,7 +11,7 @@ i,strong,th{
 }
 a{
   text-decoration: none;
-  color: #fff;
+  color: #333;
 }
 img{
   border: none;
@@ -84,6 +84,7 @@ ul,dl{
 .el-table thead tr th{
   background: none;
   color: #333;
+  font-weight: 600;
 }
 .el-table--border th{
   border-right:none;
@@ -97,6 +98,13 @@ ul,dl{
   background: #F0F9F8;
 
 }
+
+.el-table--border th, .el-table__fixed-right-patch {
+  border-bottom: none;
+}
+
+
+
 #load_warp{
   background: transparent !important;
 }

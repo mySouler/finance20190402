@@ -10,6 +10,7 @@ import 'babel-polyfill'
 import axios from 'axios'
 import App from './App'
 import Qs from 'qs'
+import common from "@/util/common"
 import {Message } from 'element-ui'
 
 
@@ -19,12 +20,12 @@ import {Message } from 'element-ui'
 /*-----------------axios基本配置-----------*/
 
 
-axios.defaults.baseURL = 'http://192.168.16.54:8088/hz-finance';
+// axios.defaults.baseURL = 'http://192.168.16.54:8088/hz-finance';
+// axios.defaults.baseURL = 'http://192.168.13.114:8088/hz-finance';
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let pending = []; //声明一个数组用于存储每个ajax请求的取消函数和ajax标识
-let cancelToken = axios.CancelToken;
 let removePending = (config) => {
   for(let p in pending){
     if(pending[p].u === config.url + '&' + config.method) { //当当前请求在数组中存在时执行函数体
@@ -52,13 +53,16 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
   removePending(response.config); 
   const data = response.data;
-
+  
   return data
 
 }, function (err) {
   // 对响应错误做点什么
   if (err && err.response) {
-    switch (err.response.status) {
+		console.log("TCL:  err.response",  err.response)
+    
+    switch (err.response.status || err.response.code  ) {
+
       case 400:
         Message.error('code:'+err.response.status+',请求错误')
         break
@@ -83,6 +87,12 @@ axios.interceptors.response.use(function (response) {
         break
 
       case 500:
+        if(err.response.data.message.indexOf("Token失效") != -1 ){
+          Message.error(err.response.data.message)
+          router.push('/')
+        
+          return 
+        }
         Message.error('code:'+err.response.status+',服务器内部错误')
         break
 
@@ -119,6 +129,8 @@ axios.interceptors.response.use(function (response) {
 
 Vue.prototype.$http = axios
 Vue.prototype.$qs = Qs
+Vue.prototype.$common =common
+
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)

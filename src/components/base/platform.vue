@@ -12,6 +12,8 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div class="contentWrap">
+
         <div class="openDailog">
             <el-button  size="small" @click="uploadFun(1)"  >批量上传</el-button>
             <el-button  size="small" @click="uploadFun(2)"  >批量修改</el-button>
@@ -22,12 +24,22 @@
                 @current-change="CurrentChange" border @selection-change="handleSelectionChange">
                 <el-table-column   type="selection"    width="50"> </el-table-column>
                 <el-table-column prop="ptName" label="平台名称"></el-table-column>
-                <el-table-column prop="platformFee" label="平台费率"></el-table-column>
+                <el-table-column prop="platformFee" label="平台费率">
+                    <template slot-scope="scope" >
+                        <div >
+                            {{scope.row.platformFee*100+"%"}}
+                        </div>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="collectionTool" label="收款工具"></el-table-column>
                 <el-table-column prop="ptDescr" label="备注"></el-table-column>
                 
                 <el-table-column prop="fundRate" label="资金费率">
-                    
+                    <template slot-scope="scope" >
+                        <div >
+                            {{scope.row.fundRate*100+"%"}}
+                        </div>
+                    </template>
                 </el-table-column>
                 <el-table-column label="状态">
                     <template slot-scope="scope" >
@@ -45,7 +57,7 @@
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
-    
+        </div>
     </div>
 </template>
 <script>

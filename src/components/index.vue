@@ -1,7 +1,7 @@
 <template>
-  
+
     <section class="el-container warp">
-      
+
         <aside class="menuNav">
         <el-menu
           :collapse="isCollapse"
@@ -45,27 +45,34 @@
               <span><img src="../assets/xiaoxi.png" alt=""></span>
               <span @click="loginOut"><img src="../assets/close.png" alt=""></span>
             </div>
-            
-            
+
+
           </el-header>
-          
-          <el-tabs :value="routeName" type="card"  @tab-click="chooseTab" closable @tab-remove="removeTab">
-            <el-tab-pane
-              v-for="item in editableTabs2"
-              :key="item.path"
-              :label="item.title"
-              :name="item.path"
-            
-            >
-            </el-tab-pane>
-          </el-tabs>
-          <div style="padding: 20px;background-color: #f9f9f9" id="load_warp">
+          <div class="tab">
+
+            <el-tabs :value="routeName" type="card"  @tab-click="chooseTab" closable @tab-remove="removeTab">
+              <el-tab-pane
+                v-for="item in editableTabs2"
+                :key="item.path"
+                :label="item.title"
+                :name="item.path"
+
+              >
+              </el-tab-pane>
+            </el-tabs>
+
+            <!-- <span @click="clearAll">
+                关闭全部
+            </span> -->
+          </div>
+
+          <div  id="load_warp">
             <router-view  :name="currentTab" ></router-view>
           </div>
-          
+
       </div>
     </section>
-  
+
 </template>
 
 
@@ -77,9 +84,9 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
     name: "index",
     data() {
       return {
-        
+
           isCollapse: false
-        
+
       }
     },
     created() {
@@ -89,20 +96,21 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
         let name = this.$route.name
         let path = this.$route.path
         this.menuListFun()   //菜单
+        this.getMenu()
     },
     computed:{
         ...mapState({
             menuList:state=>state.menuNav.menuList,
             editableTabs2:state=>state.menuNav.editableTabs2,
             tabIndex:state=>state.menuNav.tabIndex,
-            userName:state=> JSON.parse(sessionStorage.getItem('userInfo')).username || state.loginInfo && state.loginInfo.userInfo.username,
+            userName:state=> (sessionStorage.getItem('userInfo') ? JSON.parse(sessionStorage.getItem('userInfo')).username :""),
             routeName:state=>state.menuNav.editableTabsValue2,
             currentTab:state=> state.menuNav.editableTabsValue2.substring(state.menuNav.editableTabsValue2.lastIndexOf('/')+1)
         }),
-        
+
     },
     mounted() {
-      
+
     },
     methods: {
       select(row){
@@ -114,7 +122,7 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
         finance_loginOut().then((res)=>{
           console.log(res,'res')
           if(res.code == 200 ){
-            
+
             that.$message({
               type: 'success',
               message: '退出成功'
@@ -122,7 +130,7 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
             that.$router.push('/')
             sessionStorage.removeItem('token')
             sessionStorage.removeItem('userInfo')
-            
+
 
           }else{
 
@@ -137,14 +145,24 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
       menuListFun(){
         finance_menuList().then((data)=>{
           console.log(data,'----')
-          if(data.success){
+          if(data&&data.success){
             this.$store.state.menuNav.menuList = data.result
           }
         })
       },
+      async getMenu(){
+        try{
+        }catch(err){
+          console.log("TCL: getMenu -> err", err)
+
+        }
+      },
+      clearAll(){
+        this.$store.state.menuNav.editableTabs2 =[]
+      },
       openMenu(){
         this.isCollapse = !this.isCollapse
-        
+
       },
       chooseTab(val){
         this.$store.state.menuNav.editableTabsValue2 = val.name
@@ -175,19 +193,19 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
-  
+
   .menuNav
     background: #253744;
-    
+
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
     min-height: 400px;
-    
+
 
   }
   .el-menu
     border-right:none
-  .el-menu--collapse 
+  .el-menu--collapse
     li
       width:100%;
   >>>.el-submenu__title:hover,.el-menu-item:hover
@@ -201,7 +219,7 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
   .loginInfo
     float right
     line-height 30px;
-    span 
+    span
       margin-left 30px;
       display: inline-block;
       vertical-align: middle;
@@ -216,16 +234,17 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
       position absolute
       left:0
       content :''
-      width 2px 
+      width 2px
       height:100%;
       background: -webkit-linear-gradient(#1fe7b8,#16cae1); /* Safari 5.1 - 6.0 */
       background: -o-linear-gradient(#1fe7b8,#16cae1); /* Opera 11.1 - 12.0 */
       background: -moz-linear-gradient(#1fe7b8,#16cae1); /* Firefox 3.6 - 15 */
-      background: linear-gradient(#1fe7b8,#16cae1); /* 标准的语法 */    
-    
+      background: linear-gradient(#1fe7b8,#16cae1); /* 标准的语法 */
+
   >>>.el-tabs__header
-    background #fff
-    padding:15px;
+    background #eeeff2
+    // padding:0 15px 15px;
+    margin-bottom 0;
   >>>.el-icon-arrow-down:before
     content:"";
     background url(../assets/jia.png) center center no-repeat;
@@ -239,6 +258,33 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
     padding: 9px 0px
   >>>.menuIcon:hover,>>>.menuIcon:focus
     background none
+  .tab
+      >>>.el-tabs--card>.el-tabs__header .el-tabs__item.is-active
+        background #fff
+        position relative
+        &::before
+          content :"";
+          display block
+          width 100%;
+          height 2px;
+          background #fff;
+          position absolute
+          bottom -2px
+          left:0;
 
+      >>>.el-tabs--card>.el-tabs__header .el-tabs__nav
+        border:none
+      >>>.el-tabs--card>.el-tabs__header
+        border-bottom none
+  #load_warp
+      background-color: #f9f9f9
+      >>>.department
+          padding:18px 0
+          background #fff
+          margin-bottom 16px;
+          .el-form-item
+            margin-bottom 0
+      >>>.contentWrap
+        padding:0 20px 20px;
 </style>
 

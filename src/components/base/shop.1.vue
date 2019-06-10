@@ -27,9 +27,9 @@
                 @current-change="CurrentChange" border @selection-change="handleSelectionChange">
                 <el-table-column   type="selection"      width="50"> </el-table-column>
 
-                <el-table-column  prop="monthStart" label="开铺时间"></el-table-column>
+                <el-table-column width="174" prop="monthStart" label="开铺时间"></el-table-column>
                 <el-table-column   label="店铺名称/">
-                    <el-table-column  label="店铺真实名称">
+                    <el-table-column width="175" label="店铺真实名称">
                         <template slot-scope="scope">
                             <div>
                                 {{scope.row.name}}/<br/>
@@ -39,7 +39,7 @@
                     </el-table-column>
                 </el-table-column>
                 <el-table-column label="店铺组别/">
-                    <el-table-column    label="店铺负责人">
+                    <el-table-column width="187"   label="店铺负责人">
                         <template slot-scope="scope">
                             <div>
                                 {{scope.row.shopgroup}}/<br/>
@@ -48,18 +48,18 @@
                         </template>
                     </el-table-column>
                 </el-table-column>
-                <el-table-column  prop="department" label="部门"></el-table-column>
-                <el-table-column  prop="area" label="地区"></el-table-column>
-                <el-table-column  prop="platname" label="平台"></el-table-column>
-                <el-table-column  prop="bloc" label="集团"></el-table-column>
-                <el-table-column  label="平台费率">
+                <el-table-column width="118" prop="department" label="部门"></el-table-column>
+                <el-table-column width="60" prop="area" label="地区"></el-table-column>
+                <el-table-column width="92" prop="platname" label="平台"></el-table-column>
+                <el-table-column width="88" prop="bloc" label="集团"></el-table-column>
+                <el-table-column width="80" label="平台费率">
                     <template slot-scope="scope">
                         <div>
                             {{scope.row.platformFee*100000/1000+"%"}}
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="firstTool" label="收款工具">
+                <el-table-column width="127" prop="firstTool" label="收款工具">
                     <template slot-scope="scope">
                         <div>
                             {{scope.row.firstTool}}/
@@ -69,7 +69,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column  label="收款账号/">
-                    <el-table-column   label="收款账号备用">
+                    <el-table-column   width="230" label="收款账号备用">
                         <template slot-scope="scope">
                             <div>
                                 {{scope.row.account}}/
@@ -78,7 +78,7 @@
                         </template>
                     </el-table-column>
                 </el-table-column>
-                <el-table-column  prop="firstSmallandbig" label="大/小收款额"></el-table-column>
+                <el-table-column  width="99" prop="firstSmallandbig" label="大/小收款额"></el-table-column>
                 <el-table-column width="60"  prop="status" label="状态">
                     <template slot-scope="scope" >
                         <div>

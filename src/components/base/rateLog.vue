@@ -12,6 +12,8 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div class="contentWrap">
+
         <div class="item orderTable  bgc_white mt_20">
             <el-table stripe :data="logData.records"  style="width: 100%;" highlight-current-row
                 @current-change="CurrentChange" border @selection-change="handleSelectionChange">
@@ -29,7 +31,7 @@
             
         </div>
 
-    
+        </div>
     </div>
 </template>
 <script>
@@ -52,7 +54,20 @@
             pageTool,
         },
         created() {
-            this.rateLog();
+            
+            let arg = ''
+            let nowTab = this.$store.state.menuNav.editableTabsValue2
+            this.$store.state.menuNav.editableTabs2.map(item=>{
+                if( (item&&item.path) == nowTab){
+                    arg = item.args
+					console.log("TCL: created -> arg",item, arg)
+                }
+				
+            })
+            let param = {}
+            param.currency = arg+''
+
+            this.rateLog(param);
 
         },
         mounted() {
@@ -78,8 +93,8 @@
             handleCurrentChange(){
 
             },
-            async rateLog(){
-                let arg = Object.assign({},this.pageData,this.formData)
+            async rateLog(val){
+                let arg = Object.assign({},val,this.pageData,this.formData)
                 
                 
                 try{

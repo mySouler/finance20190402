@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="department">
+        <div class="department departments">
             
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
                 
@@ -16,6 +16,7 @@
                 <el-button  size="small" @click="add=true" >新增</el-button>
             </div>
         </div>
+        <div class="contentWrap">
         
         <div class="item orderTable  bgc_white mt_20">
             <el-table stripe :data="departmentData" style="width: 100%;" highlight-current-row
@@ -51,7 +52,7 @@
                 <el-button @click="add = false">取 消</el-button>
             </span>
         </el-dialog>
-    
+        </div>
     </div>
 </template>
 <script>
@@ -174,9 +175,9 @@
     }
 </script>
 <style lang="stylus" scoped>
-    .OrderNumber
-        background: #fff;
-        padding-top:22px;
+    .departments
+        padding:18px 20px !important;
+        margin-bottom 20px;
     .openDailog
         
         .el-button

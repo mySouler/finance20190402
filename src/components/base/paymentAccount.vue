@@ -12,6 +12,8 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div class="contentWrap">
+
         <div class="openDailog">
             <el-button  size="small" @click="uploadFun(1)"  >批量上传</el-button>
             <el-button  size="small" @click="uploadFun(2)"   >批量修改</el-button>
@@ -54,7 +56,13 @@
                 <el-table-column prop="password" label="API密码"></el-table-column>
                 <el-table-column prop="token" label="API令牌"></el-table-column>
                 <el-table-column prop="paymentTool" label="收款工具"></el-table-column>
-                <el-table-column prop="rate" label="余额"></el-table-column>
+                <el-table-column  label="余额">
+                    <template slot-scope="scope" >
+                        <div >
+                            {{Number(scope.row.balance) == 0 ? 0 : Number(scope.row.balance).toFixed(4)}}
+                        </div>
+                    </template>
+                </el-table-column>
                 <el-table-column  label="是否启用API">
                     <template slot-scope="scope" >
                         <div >
@@ -91,12 +99,12 @@
             </downUp>
         </div>
 
-        
+        <div class="myDialog">
         <el-dialog
-        title="编辑"
-        :visible.sync="openEdit"
-        width="25%"
-        center>
+            title="编辑"
+            :visible.sync="openEdit"
+            width="25%"
+            center>
             <el-form :inline="true" :model="editData" :rules="rules" ref="ruleForm" class="demo-form-inline addDiolog text-left el-dialog--center" label-width="110px">
                 
                 <el-form-item label="收款账号" prop="name" >
@@ -115,7 +123,13 @@
                     <el-input v-model.trim="editData.email" ></el-input>
                 </el-form-item>
                 <el-form-item  label="注册日期" prop="regTime"   >
-                    <el-input disabled v-model.trim="editData.regTime" ></el-input>
+                    
+                    <el-date-picker
+                    v-model="editData.regTime"
+                    :picker-options="pickerOptions"
+                    type="date"
+                    placeholder="选择日期">
+                    </el-date-picker>
                 </el-form-item>
                 <el-form-item  label="API密码" prop="password"   >
                     <el-input v-model.trim="editData.password" ></el-input>
@@ -149,11 +163,12 @@
                 <el-button @click="openEdit = false">取 消</el-button>
             </span>
         </el-dialog>
-
+        </div>
+        </div>
     </div>
 </template>
 <script>
-    import {finance_paypalAccountlist,finance_paypalAccountImport,finance_editAccount,finance_payselectByPrimaryKey,finance_paymentToolList} from "@/http/api"
+    import {finance_paypalAccountlist,finance_paypalAccountImport,finance_editAccount,finance_payselectByPrimaryKey} from "@/http/api"
     import pageTool from "@/components/commonTool/pageTool";
     import downUp from "@/components/commonTool/down_up_xlsx";
 
@@ -161,6 +176,11 @@
     export default {
         data() {
             return {
+                pickerOptions: {
+                    disabledDate(time) {
+                        return time.getTime() >= Date.now();
+                    }
+                },
                 editData:{},
                 tool:[],
                 openEdit:false,
@@ -178,6 +198,7 @@
                     sendtype:"",
                     title:'',
                     downPath:"",
+                    downName:'下载',
                 },
                 visible:false,
                 fileName:"收款账号配置.xls",
@@ -250,6 +271,7 @@
                // 上传函数
             uploadFun(val){
                 this.sendData.downPath = "api/paypalAccount/downloadAccountTemplate"
+                this.sendData.downName = "accountTemplate"
                 
                 if(val == 1){
                     this.sendData.sendtype = 1
@@ -270,14 +292,9 @@
                 this.editData = Object.assign({},val)
                 
                 try{
-                    let data = await finance_paymentToolList()
+                    let data = await finance_payselectByPrimaryKey()
 					console.log("TCL: selectByPrimaryKey -> data", data)
-                    
-                    if(data.success){
-                        this.tool = data.result.records
-                    }else{
-
-                    }
+                    this.tool = data.records
                 }catch(e){
                     console.log(e)
                 }
@@ -290,10 +307,19 @@
             async updateData(formName){
                 this.$refs[formName].validate( async(valid) => {
                     if (valid) {
-							console.log("TCL: updateData -> this.editData", this.editData)
-                        
+                            console.log("TCL: updateData -> this.editData", this.editData.regTime)
+                            let copyObj = Object.assign({},this.editData)
+
+                            if(copyObj.regTime){
+                                let date = this.$common.formatDateTime(copyObj.regTime)
+                                copyObj.regTime = date
+                            }else{
+                                copyObj.regTime = ''
+                            }
+							console.log("TCL: updateData -> date", copyObj)
+                            
                         try{
-                            let data = await finance_editAccount(this.editData)
+                            let data = await finance_editAccount(copyObj)
                             console.log(data,'增加')
                             if(data.success){
                                 this.paypalAccount()
@@ -334,9 +360,12 @@
             },
             down(){
                 let str = this.multipleSelection+''
-                let params = Object.assign({},this.formData,{ids:str})
+                let params =''
+                let ids = {ids:str}
+                str.length == 0 ? '' : params = Object.assign({},ids)
+                
 				console.log("TCL: down -> params", params)
-                this.$common.downloadExcl_post("/paypalAccount/export",params,"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
+                this.$common.downloadExcl_post("api/paypalAccount/export",params,"accountTemplate",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
                 
             },
 
@@ -374,7 +403,7 @@
                 color: rgb(22, 202, 225);
     .addDiolog
         >>>.el-input__inner
-            width:200px;
+            width:220px;
         >>>.Api
             margin-bottom 0
             

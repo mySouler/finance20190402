@@ -12,6 +12,8 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div class="contentWrap">
+
         <div class="openDailog">
             <el-button  size="small" @click="uploadFun(1)">批量上传</el-button>
             <el-button  size="small" @click="rateLog" >查看日志</el-button>
@@ -26,7 +28,7 @@
                 <el-table-column prop="dollarRate" label="美元汇率"></el-table-column>
                 <el-table-column prop="curChineseName" label="中文名称"></el-table-column>
                 
-                <el-table-column prop="curChineseName" label="月均汇率">
+                <el-table-column prop="monthRate" label="月均汇率">
                     
                 </el-table-column>
                 <el-table-column label="状态">
@@ -57,7 +59,10 @@
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
+        
+        <div class="myDialog">
 
+        
         <el-dialog
         title="编辑"
         :visible.sync="add"
@@ -68,10 +73,10 @@
             <el-input disabled  v-model.trim="sendData.currency" ></el-input>
         </el-form-item>
         <el-form-item label="汇率" >
-            <el-input v-model.trim="sendData.rate" ></el-input>
+            <el-input type="number" v-model.trim="sendData.rate" ></el-input>
         </el-form-item>
         <el-form-item label="美元汇率"   >
-            <el-input v-model.trim="sendData.dollarRate" ></el-input>
+            <el-input type="number"  v-model.trim="sendData.dollarRate" ></el-input>
         </el-form-item>
         <el-form-item label="备注" >
             <el-input v-model.trim="sendData.rateDescr"   ></el-input>
@@ -89,7 +94,8 @@
         <el-button @click="add = false">取 消</el-button>
     </span>
     </el-dialog>
-    
+    </div>
+    </div>
     </div>
 </template>
 <script>
@@ -114,11 +120,12 @@
                     sendtype:"",
                     title:'',
                     downPath:"",
+                    downName:'下载'
                 },
                 visible:false,
                 fileName:"财务汇率配置.xls",
-                multipleSelection:[]
-
+                multipleSelection:[],
+                multipCoin:[],
             }
         },
         components:{
@@ -133,11 +140,14 @@
         },
         methods: {
             handleSelectionChange(val){
-                this.multipleSelection=[]
+                this.multipleSelection= []
+                this.multipCoin = []
                 val.map((v)=>{
-                    this.multipleSelection.push( `'${v.paymentToolId}'`)
+                    this.multipleSelection.push(v.rateId)
+                    this.multipCoin.push(v.currency)
                 })
 				console.log("TCL: handleSelectionChange -> this.multipleSelection", val,this.multipleSelection)
+				console.log("TCL: handleSelectionChange -> this.multipCoin", val,this.multipCoin)
                 
             },
             getPage(val){
@@ -154,6 +164,9 @@
             uploadFun(val){
                 this.sendData.downPath = "/api/rate/downloadRateConfigTemplate"
                 this.sendData.url = "api/rate/excel/import"
+                this.sendData.type = "post"
+                this.sendData.downName = "rateTemplate"
+                
                 if(val == 1){
                     this.sendData.sendtype = 1
                     this.sendData.title = "批量上传"
@@ -195,8 +208,11 @@
             },
             down(){
                 let str = this.multipleSelection+''
-                let params = Object.assign({},this.formData,{paymentToolId:str})
-                this.$common.downloadExcl_get("api/rate/export",this.formData,"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
+                let params =''
+                let ids = {idrateIds:str}
+                str.length == 0 ? '' : params = Object.assign({},ids)
+                
+                this.$common.downloadExcl_post("api/rate/export",params,"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
             },
             async getRate(){
                 let arg = Object.assign({},this.formData,this.pageData)
@@ -217,7 +233,10 @@
                 let obj = {
                     name:"日志",
                     path:"/rateLog",
+                    args:this.multipCoin
                 }
+                
+				
                 this.$store.commit('addTab',obj)
                 
             },

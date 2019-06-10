@@ -15,6 +15,8 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div class="contentWrap">
+
         <div class="openDailog">
             <el-button  size="small" @click="uploadFun(1)" >批量上传</el-button>
             <el-button  size="small" @click="uploadFun(2)" >批量修改</el-button>
@@ -44,6 +46,7 @@
         <downUp   :propData="sendData" :centerDialogVisible.sync="visible"  >
             <strong>{{fileName}}</strong>
         </downUp>
+    </div>
     </div>
 </template>
 <script>

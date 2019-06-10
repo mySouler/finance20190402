@@ -12,6 +12,8 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div class="contentWrap">
+
         <div class="openDailog">
             <el-button  size="small" @click="uploadFun(1)" >批量上传</el-button>
             <el-button  size="small" @click="uploadFun(2)" >批量修改</el-button>
@@ -50,7 +52,7 @@
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
-    
+        </div>
     </div>
 </template>
 <script>
@@ -118,6 +120,8 @@
             uploadFun(val){
                 this.sendData.downPath = "api/paymentTool/model"
                 this.sendData.url = "api/paymentTool/AddOrUpd"
+                this.sendData.type = "post"
+
                 if(val == 1){
                     this.sendData.sendtype = 1
                     this.sendData.title = "批量上传"
@@ -134,6 +138,7 @@
 
             },
             down(){
+                
                 let str = this.multipleSelection+''
                 let params = Object.assign({},this.formData,{paymentToolId:str})
                 this.$common.downloadExcl_get("api/paymentTool/export",params,"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))

@@ -12,6 +12,8 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div class="contentWrap">
+
         <div class="openDailog">
             <el-button  size="small" @click="uploadFun(1)" >批量上传</el-button>
             <el-button  size="small" @click="down" >下载</el-button>
@@ -24,7 +26,7 @@
                 <el-table-column prop="usertime" label="操作时间">
                     
                 </el-table-column>
-                <el-table-column prop="username" label="操作时间">
+                <el-table-column prop="username" label="操作人">
                     
                 </el-table-column>
             </el-table>
@@ -34,7 +36,7 @@
         <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
             <strong>{{fileName}}</strong>
         </downUp>
-    
+        </div>
     </div>
 </template>
 <script>

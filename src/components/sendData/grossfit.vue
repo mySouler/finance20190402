@@ -3,14 +3,20 @@
         <div class="department">
             
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
-                <el-form-item label="分类名称">
-                    <el-input v-model.trim="formData.cataloguename"></el-input>
+                <el-form-item label="部门">
+                    <el-input v-model.trim="formData.deptname"></el-input>
                 </el-form-item>
-                <el-form-item label="平台名称">
-                    <el-input v-model.trim="formData.ptname"></el-input>
+                <el-form-item label="平台">
+                    <el-input v-model.trim="formData.ptName"></el-input>
+                </el-form-item>
+                <el-form-item label="组别">
+                    <el-input v-model.trim="formData.groupName"></el-input>
+                </el-form-item>
+                <el-form-item label="操作人">
+                    <el-input v-model.trim="formData.userName"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button class="search" @click="search" size="medium">查询</el-button>
+                    <el-button class="search" @click="getConfigListpage" size="medium">查询</el-button>
                     <el-button @click="resetForm" size="small" type="text" class="btn_text">清空</el-button>
                 </el-form-item>
             </el-form>
@@ -19,39 +25,32 @@
 
         
         <div class="openDailog">
-            <el-button  size="small" @click="uploadFun(1)" >批量上传</el-button>
+            <el-button  size="small" @click="uploadFun(1)" >批量新增</el-button>
             <el-button  size="small" @click="uploadFun(2)" >批量修改</el-button>
-            <el-button  size="small" @click="down" >批量下载</el-button>
+            <el-button  size="small" @click="down" >下载</el-button>
+            <el-button  size="small" @click="deled" >删除</el-button>
         </div>
         <div class="item orderTable  bgc_white mt_20">
-            <el-table stripe :data="catalogueList.records"  style="width: 100%;" highlight-current-row
+            <el-table stripe :data="configList.records"  style="width: 100%;" highlight-current-row
                 border @selection-change="handleSelectionChange">
                 <el-table-column   type="selection"      width="50"> </el-table-column>
-                <el-table-column prop="cataloguename" label="分类名称"></el-table-column>
-                <el-table-column prop="cataloguelevel" label="分类等级"></el-table-column>
-                <el-table-column prop="ptname" label="平台名称"></el-table-column>
-                <el-table-column  label="平台费率">
-                    <template slot-scope="scope" >
-                        <div>
-                            {{scope.row.ptcost*100+"%"}}
-                        </div>
-                    </template>
-                </el-table-column>
-                <el-table-column label="状态">
-                    <template slot-scope="scope" >
-                        <div>
-                            {{scope.row.status == 1 ? "开启" : "关闭"}}
-                        </div>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="usertime" label="操作时间">
-                    
-                </el-table-column>
-                <el-table-column prop="username" label="操作人">
-                    
-                </el-table-column>
+                <el-table-column prop="deptname" label="部门"></el-table-column>
+                <el-table-column prop="ptName" label="平台"></el-table-column>
+                <el-table-column prop="groupName" label="组别"></el-table-column>
+                <el-table-column prop="refundRate" label="退款率"></el-table-column>
+                <el-table-column prop="publicationRate" label="刊登费率"></el-table-column>
+                <el-table-column prop="inventoryprofitandlossRate" label="库存损益率"></el-table-column>
+                <el-table-column prop="vatTax" label="VAT报税"></el-table-column>
+                <el-table-column prop="marketingcost" label="营销费率"></el-table-column>
+                <el-table-column prop="friedpoints" label="炒分费用"></el-table-column>
+                <el-table-column prop="vpsplatformspecific" label="VPS及平台推广费率"></el-table-column>
+                <el-table-column prop="platformRate" label="平台费率"></el-table-column>
+                <el-table-column prop="collectionRate" label="收款费率"></el-table-column>
+                <el-table-column prop="fundRate" label="资金费率"></el-table-column>
+                <el-table-column prop="userName" label="操作人"></el-table-column>
+                <el-table-column prop="userTime" label="操作时间"></el-table-column>
             </el-table>
-            <pageTool :pageData="catalogueList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
+            <pageTool :pageData="configList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
             
             <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
@@ -62,7 +61,7 @@
     </div>
 </template>
 <script>
-    import {finance_catalogueList,finance_selectByPrimaryKey,finance_export} from "@/http/api"
+    import {finance_configListpage,finance_configDelete,finance_configExport} from "@/http/api"
     import pageTool from "@/components/commonTool/pageTool";
     import downUp from "@/components/commonTool/down_up_xlsx";
     export default {
@@ -76,7 +75,7 @@
                     current:1,
                     size:10
                 },
-                catalogueList:{},
+                configList:{},
                 add:false,
                 rules:{},
                 department:{},
@@ -89,7 +88,7 @@
                     downPath:"",
                 },
                 visible:false,
-                fileName:"分类平台费.xls",
+                fileName:"日进订单毛利--模板下载.xls",
                 multipleSelection:[]
             }
         },
@@ -98,8 +97,8 @@
             downUp
         },
         created() {
-            // this.getCatalogueList();
-            this.search()
+            // this.getconfigList();
+            this.getConfigListpage()
 
         },
         mounted() {
@@ -108,7 +107,7 @@
             handleSelectionChange(val){
                 this.multipleSelection=[]
                 val.map((v)=>{
-                    this.multipleSelection.push( `'${v.serial}'`)
+                    this.multipleSelection.push( v.id)
                 })
 				console.log("TCL: handleSelectionChange -> this.multipleSelection", this.multipleSelection)
                 
@@ -116,44 +115,61 @@
             getPage(val){
                 console.log(val,'getPage');
                 this.pageData.current = val
-                // this.getCatalogueList()
+                // this.getconfigList()
                 this.search()
                 
             },
             getSize(val){
                 console.log(val,'getSize');
                 this.pageData.size = val
-                // this.getCatalogueList()
+                // this.getconfigList()
                 this.search()
             },
               // 上传函数
             uploadFun(val){
-                this.sendData.downPath = "api/Catalogue/model"
-                this.sendData.url = "api/Catalogue/AddOrUpd"
-                this.sendData.type="post"
+                this.sendData.downPath = "api/dailyMargin/downloadDailyMarginConfigTemplate"
+                this.sendData.type="put"
                 if(val == 1){
-                    this.sendData.sendtype = 1
-                    this.sendData.title = "批量上传"
+                    
+                    this.sendData.title = "批量新增"
+                    this.sendData.url = "api/dailyMargin/batchAdd"
                 }else{
-                    this.sendData.sendtype = 2
+                    
+                    this.sendData.url = "api/dailyMargin/batchChange"
                     this.sendData.title = "批量修改"
                 }
                 this.visible=true
             },
+            async deled(){
+                let str = this.multipleSelection+''
+                let params = {}
+                params.id = str
+                try{
+                    let data = await finance_configDelete(params);
+                    console.log("data ====",data)
+                    if(data.success){
+                        this.$message(data.message)
+                        this.getConfigListpage();
+                    }
+                }catch(err){
+                    console.log(err)
+                }
+            },
             down(){
                 let str = this.multipleSelection+''
-                let params = Object.assign({},this.formData,{serial:str})
+                let params = {}
+                params.id = str
                 console.log("TCL: down -> params", params)
-                this.$common.downloadExcl_get("api/Catalogue/export",params,"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
+                this.$common.downloadExcl_post("api/dailyMargin/export",params,"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
             },
-            async getCatalogueList(){
+            async getConfigListpage(){
 				
                 let arg = Object.assign({},this.pageData,this.formData)
                 try{
-                    let data = await finance_catalogueList(arg);
+                    let data = await finance_configListpage(arg);
                     console.log("data ====",data)
                     if(data.success){
-                        this.catalogueList = data.result
+                        this.configList = data.result
                     }
                 }catch(err){
                     console.log(err)
@@ -165,7 +181,7 @@
                 try{
                     let data = await finance_selectByPrimaryKey(params);
                     console.log("data ====  sss",data)
-                    this.catalogueList = data
+                    this.configList = data
                 }catch(err){
                     console.log(err)
                 }

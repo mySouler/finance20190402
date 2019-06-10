@@ -15,6 +15,8 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div class="contentWrap">
+
         <div class="openDailog">
             <el-button  size="small" @click="add=true" >新增</el-button>
         </div>
@@ -68,7 +70,7 @@
         <el-button @click="add = false">取 消</el-button>
     </span>
     </el-dialog>
-    
+        </div>
     </div>
 </template>
 <script>

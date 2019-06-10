@@ -1,57 +1,51 @@
 <template>
-    <div>
-        <div class="OrderNumber">
-            
-            <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
-                <el-form-item label="用户名">
-                    <el-input v-model.trim="formData.username"></el-input>
-                </el-form-item>
-                <el-form-item label="部门">
-                    
-                    <el-select v-model="formData.department" placeholder="请选择">
-                        <el-option
-                        v-for="item in departments"
-                        :key="item.id"
-                        :label="item.departName"
-                        :value="item.departName">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="search"  @click="saffInit" size="medium">查询</el-button>
-                    <el-button @click="resetForm" size="small" type="text" class="btn_text">清空</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
-        <div class="openDailog">
-            <el-button  size="small" @click="openAdd" >新增</el-button>
-        </div>
-        <div class="item orderTable  bgc_white mt_20">
-            <el-table stripe :data="saffList.records" style="width: 100%;" highlight-current-row
-                @current-change="CurrentChange" border @selection-change="handleSelectionChange">
-                <el-table-column prop="username" label="采购员"></el-table-column>
-                <el-table-column prop="department" label="部门"></el-table-column>
-                <el-table-column prop="position" label="岗位"></el-table-column>
-                <el-table-column prop="status" label="状态">
-                    <template slot-scope="scope" >
-                        <div >
-                            {{scope.row.status == 1 ? "开启" : "关闭"}}
-                        </div>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="purchasework" label="操作">
-                    <template  slot-scope="scope">
-                        <div>
-                            <span class="link" @click.stop="edit(scope.row)"><img src="../../assets/edit.png" ></span>&nbsp;&nbsp;
-                            <span class="link" @click.stop="power(scope.row)"><img src="../../assets/power.png" ></span>
-                        </div>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <pageTool :pageData="saffList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
+  <div>
+    <div class="OrderNumber department">
+      <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
+        <el-form-item label="用户名">
+          <el-input v-model.trim="formData.username"></el-input>
+        </el-form-item>
+        <el-form-item label="部门">
+          <el-select v-model="formData.department" placeholder="请选择">
+            <el-option v-for="item in departments" :key="item.id" :label="item.departName" :value="item.departName">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="search" @click="saffInit" size="medium">查询</el-button>
+          <el-button @click="resetForm" size="small" type="text" class="btn_text">清空</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="contentWrap">
+      <div class="openDailog">
+        <el-button size="small" @click="openAdd">新增</el-button>
+      </div>
+      <div class="item orderTable  bgc_white mt_20">
+        <el-table stripe :data="saffList.records" style="width: 100%;" highlight-current-row @current-change="CurrentChange" border @selection-change="handleSelectionChange">
+          <el-table-column prop="username" label="用户名"></el-table-column>
+          <el-table-column prop="department" label="部门"></el-table-column>
+          <el-table-column prop="position" label="岗位"></el-table-column>
+          <el-table-column prop="status" label="状态">
+            <template slot-scope="scope">
+                <div >
+                    {{scope.row.status == 1 ? "开启" : "关闭"}}
+                </div>
+            </template>
+        </el-table-column>
+        <el-table-column prop="purchasework" label="操作">
+            <template slot-scope="scope">
+              <div>
+                <span class="link" @click.stop="edit(scope.row)"><img src="../../assets/edit.png" ></span>&nbsp;&nbsp;
+                <span class="link" @click.stop="power(scope.row)"><img src="../../assets/power.png" ></span>
+              </div>
+            </template>
+        </el-table-column>
+        </el-table>
+          <pageTool :pageData="saffList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
         </div>
-        
+        <div class="myDialog">
         <el-dialog
         :title="title"
         :visible.sync="add"
@@ -91,225 +85,233 @@
                 <el-button @click="add = false">取 消</el-button>
             </span>
         </el-dialog>
-    
+        </div>
+        <power v-bind="powerProp" v-if="openPower" :openPowerDia.sync="openPower" ></power>
+    </div>
     </div>
 </template>
+
 <script>
-    import {finance_saffList,finance_userEdit,finance_userAdd,finance_treeList,finance_userDepartList,finance_departmens} from "@/http/api"
-    import pageTool from "@/components/commonTool/pageTool";
-    import downUp from "@/components/commonTool/down_up_xlsx";
-    export default {
-        data() {
-            return {
-                data:{},
-                formData:{},
-                pageData:{
-                    current:1,
-                    size:10
-                },
-                roles:[
-                    // {key:"1",value:"经理"},
-                    // {key:"2",value:"主管"},
-                    // {key:"3",value:"组长"},
-                    // {key:"4",value:"职员"}
-                ],
-                roleObj:{},
-                roleInfo:{
-                    
-                },
-                status:false,
-                add:false,
-                departmentVal:'',
-                rules:{
-                    username: [
-                        { required: true, message: '请输入', trigger: 'blur' },
-                    ],
-                    department: [
-                        { required: true, message: '请选择', trigger: 'blur' },
-                    ],
-                    positionId: [
-                        { required: true, message: '请选择', trigger: 'blur' },
-                    ]
-                },
-                saffList:{},
-                currentRow:null,
-                departments:[],
-                sendData:{
-                    href:"",
-                    url:"",
-                    sendtype:"",
-                    title:'',
-                    downPath:"",
-                },
-                title:"新增",
-                visible:false,
-                fileName:"分类平台费.xls",
-                multipleSelection:[],
-                add_edit_status:true,
-
-            }
+  import {
+    finance_saffList,
+    finance_userEdit,
+    finance_userAdd,
+    finance_treeList,
+    finance_userDepartList,
+    finance_departmens,
+    finance_userPermission,
+    finance_updateUserPermission
+  } from "@/http/api"
+  import pageTool from "@/components/commonTool/pageTool";
+  import power from "@/components/commonTool/power";
+  import downUp from "@/components/commonTool/down_up_xlsx";
+  export default {
+    data() {
+      return {
+        data: {},
+        formData: {},
+        pageData: {
+          current: 1,
+          size: 10
         },
-        created() {
-            this.saffInit();
-            this.initDepartment()
-            this.getDepart();
+        roles: [
+          // {key:"1",value:"经理"},
+          // {key:"2",value:"主管"},
+          // {key:"3",value:"组长"},
+          // {key:"4",value:"职员"}
+        ],
+        roleObj: {},
+        roleInfo: {
         },
-        components:{
-            pageTool,
-            downUp
+        status: false,
+        add: false,
+        departmentVal: '',
+        rules: {
+          username: [{
+            required: true,
+            message: '请输入',
+            trigger: 'blur'
+          }, ],
+          department: [{
+            required: true,
+            message: '请选择',
+            trigger: 'blur'
+          }, ],
+          positionId: [{
+            required: true,
+            message: '请选择',
+            trigger: 'blur'
+          }, ]
         },
-        mounted() {
-
+        saffList: {},
+        currentRow: null,
+        departments: [],
+        sendData: {
+          href: "",
+          url: "",
+          sendtype: "",
+          title: '',
+          downPath: "",
         },
-        methods: {
-            CurrentChange(val){
-                this.currentRow = val;
-            },
-            handleCurrentChange(){
-
-            },
-            openAdd(){
-                this.title = "新增"
-                this.roleInfo = {}
-                this.roleInfo.status = 1
-                this.add = this.add_edit_status = true
-            },
-            edit(data){
-                console.log("TCL: edit -> data", data)
-                this.title = "编辑"
-                this.add = true
-                this.roleInfo = {}
-                this.roleInfo = Object.assign({},data)
-                this.add_edit_status = false
-            },
-            power(data){
-                console.log('power')
-
-            },
-            handleSizeChange(){
-
-            },
-            getPage(val){
-                console.log(val,'getPage');
-                this.pageData.current = val
-                this.saffInit()
-
-            },
-            getSize(val){
-                console.log(val,'getSize');
-                this.pageData.size = val
-                this.saffInit()
-            },
-            handleSelectionChange(val){
-                this.multipleSelection=[]
-                val.map((v)=>{
-                    this.multipleSelection.push( `'${v.serial}'`)
-                })
-				console.log("TCL: handleSelectionChange -> this.multipleSelection", this.multipleSelection)
-                
-            },
-            async getDepart(){
-                try{
-                    let data = await finance_departmens();
-                    if(data.success){
-                        this.roles = data.result
-                        data.result.map(res=>{
-                            this.roleObj[res.id] = res.roleName
-                        })
-                        console.log(data,'getDepartgetDepartgetDepartgetDepart')
-                        
-                    }
-                }catch(err){
-                    console.log(err)
-                }
-            },
-            async updateInfo(formName){
-                this.$refs[formName].validate( async(valid) => {
-                    if (valid) {
-                        this.roleInfo.position = this.roleObj[this.roleInfo.positionId]
-                        try{
-                            let data = null
-                            console.log("TCL: updateInfo -> this.roleInfo", this.roleInfo)
-                            if(this.add_edit_status){
-                                data = await finance_userAdd(this.roleInfo)
-                                console.log("TCL: finance_userAdd -> data", data)
-                            }else{
-                                data = await finance_userEdit(this.roleInfo)
-                                console.log("TCL: finance_userEdit -> data", data)
-                            }
-                            if(data.success){
-                                this.$message.success(data.message)
-                                this.saffInit()
-                                setTimeout(()=>{
-                                    this.add = false
-                                },1000)
-                            }else{
-                                this.$message.error(data.message)
-                            }
-                            
-                        }catch(error){
-                            console.log("TCL: openAdd -> error", error)
-                        }
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
-            },
-            saffInit(){
-                let params = Object.assign({},this.formData,this.pageData)
-                finance_saffList(params).then((res)=>{
-                    console.log(res,'data')
-                    if(res.success){
-                        this.saffList = res.result
-                    }
-                }).catch((error)=>{
-                    console.log(error)
-                })
-                
-            },
-            initDepartment(){
-                finance_treeList().then((data)=>{
-					console.log("TCL: saffInit -> data", data)
-                    if(data.success){
-                        this.departments = data.result[0].children
-                    }
-
-                })
-            },
-            async updateData(){
-
-            },
-            async userDepart(data={id:''}){
-                let obj = {}
-                obj.userId  = data.id
-                try{
-                    let data = await finance_userDepartList(obj)
-					console.log("TCL: userDepart -> data", data)
-                }catch(err){
-				console.log("TCL: userDepart -> err", err)
-
-                }
-            },
-            resetForm: function () { // 清空表单条件
-                for (let key in this.formData) {
-                this.formData[key] = ''
-                }
-                this.createtime = ''
-            },
+        title: "新增",
+        visible: false,
+        fileName: "分类平台费.xls",
+        multipleSelection: [],
+        add_edit_status: true,
+        powerProp:{
+          "initUrl":finance_userPermission,
+          "updataUrl":finance_updateUserPermission,
+          "type":"userId",
+          "id":"",
         },
-        beforeDestory() {
-        },
-        computed: {
-        },
-        watch: {
+        openPower:false,
+      }
+    },
+    created() {
+      this.saffInit();
+      this.initDepartment()
+      this.getDepart();
+    },
+    components: {
+      pageTool,
+      downUp,
+      power
+    },
+    mounted() {
+    },
+    methods: {
+      CurrentChange(val) {
+        this.currentRow = val;
+      },
+      handleCurrentChange() {
+      },
+      openAdd(data) {
+        this.title = "新增"
+        this.roleInfo = {}
+        this.roleInfo.status = 1
+        this.add = this.add_edit_status = true
+      },
+      edit(data) {
+        console.log("TCL: edit -> data", data)
+        this.title = "编辑"
+        this.add = true
+        this.roleInfo = {}
+        this.roleInfo = Object.assign({}, data)
+        this.add_edit_status = false
+      },
+      getPage(val) {
+        console.log(val, 'getPage');
+        this.pageData.current = val
+        this.saffInit()
+      },
+      getSize(val) {
+        console.log(val, 'getSize');
+        this.pageData.size = val
+        this.saffInit()
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = []
+        val.map((v) => {
+          this.multipleSelection.push(`'${v.serial}'`)
+        })
+      },
+      power(data){
+        this.openPower = true
+        console.log(this.openPower,data)
+        this.powerProp.id=data.id
+      },
+      async getDepart() {
+        try {
+          let data = await finance_departmens();
+          if (data.success) {
+            this.roles = data.result
+            data.result.map(res => {
+              this.roleObj[res.id] = res.roleName
+            })
+          }
+        } catch (err) {
+          console.log(err)
         }
+      },
+      async updateInfo(formName) {
+        this.$refs[formName].validate(async(valid) => {
+          if (valid) {
+            this.roleInfo.position = this.roleObj[this.roleInfo.positionId]
+            try {
+              let data = null
+              console.log("TCL: updateInfo -> this.roleInfo", this.roleInfo)
+              if (this.add_edit_status) {
+                data = await finance_userAdd(this.roleInfo)
+                console.log("TCL: finance_userAdd -> data", data)
+              } else {
+                data = await finance_userEdit(this.roleInfo)
+                console.log("TCL: finance_userEdit -> data", data)
+              }
+              if (data.success) {
+                this.$message.success(data.message)
+                this.saffInit()
+                setTimeout(() => {
+                  this.add = false
+                }, 1000)
+              } else {
+                this.$message.error(data.message)
+              }
+            } catch (error) {
+              console.log("TCL: openAdd -> error", error)
+            }
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      saffInit() {
+        let params = Object.assign({}, this.formData, this.pageData)
+        finance_saffList(params).then((res) => {
+          console.log(res, 'data')
+          if (res.success) {
+            this.saffList = res.result
+          }
+        }).catch((error) => {
+          console.log(error)
+        })
+      },
+      initDepartment() {
+        finance_treeList().then((data) => {
+          console.log("TCL: saffInit -> data", data)
+          if (data.success) {
+            this.departments = data.result[0].children
+          }
+        })
+      },
+      async userDepart(data = {id: ''}) {
+        let obj = {}
+        obj.userId = data.id
+        try {
+          let data = await finance_userDepartList(obj)
+          console.log("TCL: userDepart -> data", data)
+        } catch (err) {
+          console.log("TCL: userDepart -> err", err)
+        }
+      },
+      resetForm: function() { // 清空表单条件
+        for (let key in this.formData) {
+          this.formData[key] = ''
+        }
+        this.createtime = ''
+      },
+    },
+    beforeDestory() {},
+    computed: {},
+    watch: {
+
     }
+  }
 </script>
+
 <style lang="stylus" scoped>
-    .OrderNumber
-        background: #fff;
-        padding-top:22px;
+
+
     .openDailog
         padding 20px 0
         .el-button
@@ -326,4 +328,8 @@
     .roleDiolog
         >>>.el-input__inner
             width:188px
+    .staff
+        >>>.el-dialog
+            min-height:300px;
+
 </style>

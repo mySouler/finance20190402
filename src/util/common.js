@@ -4,8 +4,7 @@ const common  = {}
 
 // 下载文件  post
 common.downloadExcl_post = function (url, data, name, loading) {
-    let token = sessionStorage.getItem('token')
-    axios.post(url, data,{responseType: 'blob'}).then((res) => {
+    axios.post(url, data,{headers: {'Content-Type': 'application/json;charset=UTF-8'},responseType: 'blob'}).then((res) => {
         
         let fileName = name
             //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet这里表示xlsx类型
@@ -29,10 +28,10 @@ common.downloadExcl_post = function (url, data, name, loading) {
 
 // 下载文件   get
 common.downloadExcl_get = function (url, data, name, loading) {
-    let token = sessionStorage.getItem('token')
-
+    let fileName = name
+	console.log("TCL: common.downloadExcl_get -> fileName", fileName)
     axios.get(url, {params:data,responseType:"blob"}).then((res) => {
-        let fileName = name
+        
             //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet这里表示xlsx类型
     　  let blob = new Blob([res], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}); 
         if (window.navigator.msSaveOrOpenBlob) {

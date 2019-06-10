@@ -12,6 +12,8 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div class="contentWrap">
+
         <div class="openDailog">
             <el-button  size="small" @click="opneAdd"  >新增</el-button>
             <el-button  size="small" @click="deleData"   >删除</el-button>
@@ -19,7 +21,9 @@
         <div class="item orderTable  bgc_white mt_20">
             <el-table stripe :data="rateList.records"  style="width: 100%;" highlight-current-row
                 @current-change="CurrentChange" border @selection-change="handleSelectionChange">
-                <el-table-column   type="selection"      width="50"> </el-table-column>
+                <el-table-column   type="selection"  :selectable='selectInit'     width="50">
+                    
+                </el-table-column>
                 <el-table-column prop="currency" label="币种"></el-table-column>
                 <el-table-column prop="rate" label="汇率"></el-table-column>
                 <el-table-column prop="dollarRate" label="美元汇率"></el-table-column>
@@ -38,6 +42,7 @@
             
         </div>
 
+        <div class="myDialog">
         <el-dialog
         title="新增"
         :visible.sync="add"
@@ -50,15 +55,15 @@
                         v-for="item in coin"
                         :key="item.rateId"
                         :label="item.currency"
-                        :value="item.rateId">
+                        :value="item.currency">
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="汇率" prop="rate" >
-                    <el-input   v-model.trim="sendData.rate" ></el-input>
+                    <el-input type="number"   v-model.trim="sendData.rate" ></el-input>
                 </el-form-item>
-                <el-form-item  label="美元汇率" prop="dollarRate"   >
-                    <el-input v-model.trim="sendData.dollarRate" ></el-input>
+                <el-form-item   label="美元汇率" prop="dollarRate"   >
+                    <el-input type="number"  v-model.trim="sendData.dollarRate" ></el-input>
                 </el-form-item>
                 <el-form-item  label="生效日期" prop="effectiveTime" >
                     <el-date-picker
@@ -76,7 +81,8 @@
                 <el-button @click="add = false">取 消</el-button>
             </span>
         </el-dialog>
-    
+        </div>
+        </div>
     </div>
 </template>
 <script>
@@ -131,6 +137,14 @@
         mounted() {
         },
         methods: {
+            selectInit(row,index){
+                
+                if(row.status==1){
+                    return false //不可勾选
+                }else{    
+                    return true  //可勾选
+                }
+            },
             getPage(val){
                 console.log(val,'getPage');
                 this.pageData.current = val
@@ -159,6 +173,7 @@
             },
             async opneAdd(){
                 this.add = true
+                this.sendData ={}
                 try{
                     let data = await finance_rateListCurrency()
 					console.log("TCL: opneAdd -> data", data)

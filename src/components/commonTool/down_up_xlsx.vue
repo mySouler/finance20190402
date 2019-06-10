@@ -44,6 +44,7 @@
                 url:this.propData.url,
                 title:this.propData.title,
                 downPath:this.propData.downPath,
+                downName:this.propData.downName || "下载",
             }
         },
         props: {
@@ -78,6 +79,7 @@
                     this.url = val.url,
                     this.title = val.title
                     this.downPath = val.downPath
+                    this.downName = val.downName || "下载"
                 },
                 deep: true
             },
@@ -85,11 +87,11 @@
         methods: {
             downLoad:function(){
                 
-                this.$common.downloadExcl_get(this.downPath,{},"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
+                this.$common.downloadExcl_get(this.downPath,{},this.downName,this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
             },
             uploadFun:function(content){
                 let that = this
-                console.log(545454);
+                
                 let token = sessionStorage.getItem('token')
                 
                 let param = new FormData()  // 创建form对象

@@ -18,6 +18,11 @@ export default {
         addTab(state,value) {
             console.log(value,'router="item" ')
             let include = state.editableTabs2.some((item)=>{
+                if( item.path ==  value.path ){
+                    item.title = value.name
+                    item.path  =  value.path
+                    item.args  = value.args||''
+                }
                 return item.path ==  value.path
             })
             console.log(include,'include')
@@ -25,6 +30,7 @@ export default {
                 state.editableTabs2.push({
                     title:value.name,
                     path: value.path,
+                    args:value.args||'',
                 });
             }
             state.editableTabsValue2 =  value.path

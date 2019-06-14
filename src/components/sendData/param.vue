@@ -32,7 +32,7 @@
               <el-form :inline="true" :model="editFrom" class="rightPanel demo-form-inline text-left" label-width="100px">
 
                 <el-form-item label="修正运费参数">
-                    <el-input  v-model.number="editFrom.bill"></el-input>
+                    <el-input type="number" v-model.number="editFrom.bill"></el-input>
                 </el-form-item>
             </el-form>
               <span slot="footer" class="dialog-footer">

@@ -35,6 +35,21 @@ const warehouse = () => import('@/components/sendData/warehouse')//"仓库人力
 const express = () => import('@/components/sendData/express')//"运费为0的配置"
 const totalincome = () => import('@/components/sendData/totalincome')//"总收入为0的配置"
 const param = () => import('@/components/sendData/param')//"修正运费参数"
+const jurisdiction = () => import('@/components/sendData/jurisdiction')//"发货数据下载权限配置"
+const getgrossfit = () => import('@/components/sendData/getgrossfit')//""取毛利配置表的配置""
+
+const api = () => import('@/components/apiTotal/api')//""api退款统计""
+
+
+const upload = () => import('@/components/check/upload')//"核对数据上传"
+const parseLog = () => import('@/components/check/parseLog')//"解析日志"
+const download = () => import('@/components/dataTotal/download')//"发货数据下载"
+const updfreight = () => import('@/components/dataTotal/updfreight')//"发货数据下载"
+
+
+
+
+
 
 
 
@@ -79,7 +94,16 @@ export default new Router({
             warehouse,
             express,
             totalincome,
-            param
+            param,
+            jurisdiction,
+            api,
+            upload,
+            parseLog,
+            getgrossfit,
+            download,
+            updfreight,
+
+
           }
         }
       ]

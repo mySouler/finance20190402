@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="department">
-            
+
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
                 <el-form-item label="部门">
                     <el-input v-model.trim="formData.deptname"></el-input>
@@ -23,7 +23,7 @@
         </div>
         <div class="contentWrap">
 
-        
+
         <div class="openDailog">
             <el-button  size="small" @click="uploadFun(1)" >批量新增</el-button>
             <el-button  size="small" @click="uploadFun(2)" >批量修改</el-button>
@@ -51,12 +51,12 @@
                 <el-table-column prop="userTime" label="操作时间"></el-table-column>
             </el-table>
             <pageTool :pageData="configList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
-            
+
             <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
-        
+
         </div>
     </div>
 </template>
@@ -110,14 +110,14 @@
                     this.multipleSelection.push( v.id)
                 })
 				console.log("TCL: handleSelectionChange -> this.multipleSelection", this.multipleSelection)
-                
+
             },
             getPage(val){
                 console.log(val,'getPage');
                 this.pageData.current = val
                 // this.getconfigList()
                 this.search()
-                
+
             },
             getSize(val){
                 console.log(val,'getSize');
@@ -130,30 +130,46 @@
                 this.sendData.downPath = "api/dailyMargin/downloadDailyMarginConfigTemplate"
                 this.sendData.type="put"
                 if(val == 1){
-                    
+
                     this.sendData.title = "批量新增"
                     this.sendData.url = "api/dailyMargin/batchAdd"
                 }else{
-                    
+
                     this.sendData.url = "api/dailyMargin/batchChange"
                     this.sendData.title = "批量修改"
                 }
                 this.visible=true
             },
             async deled(){
+                if(this.multipleSelection.length === 0){
+                  return this.$message.error("请选择要删除的数据")
+                }
                 let str = this.multipleSelection+''
                 let params = {}
                 params.id = str
-                try{
-                    let data = await finance_configDelete(params);
-                    console.log("data ====",data)
-                    if(data.success){
-                        this.$message(data.message)
-                        this.getConfigListpage();
+                this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then(async() => {
+                    try{
+                        let data = await finance_configDelete(params);
+                        console.log("data ====",data)
+                        if(data.success){
+                            this.$message(data.message)
+                            this.getConfigListpage();
+                        }
+                    }catch(err){
+                        console.log(err)
                     }
-                }catch(err){
-                    console.log(err)
-                }
+
+                }).catch(() => {
+                  this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                  });
+                });
+
             },
             down(){
                 let str = this.multipleSelection+''
@@ -163,7 +179,7 @@
                 this.$common.downloadExcl_post("api/dailyMargin/export",params,"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
             },
             async getConfigListpage(){
-				
+
                 let arg = Object.assign({},this.pageData,this.formData)
                 try{
                     let data = await finance_configListpage(arg);

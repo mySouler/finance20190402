@@ -43,6 +43,10 @@ const finance_userAdd = (data)=>{ return axios.post('api/sys/user/add',data)}
 //sys/user/edit 编辑员工信息
 const finance_userEdit = (data)=>{ return axios.put('api/sys/user/edit',data)}
 
+//sys/user/getUserProperties 获取用户部分属性
+const getUserProperties = (data)=>{ return axios.get('api/sys/user/getUserProperties',{params:data })}
+
+
 
 /*---部门---*/
 //添加部门
@@ -116,7 +120,7 @@ const finance_addChangeRate= (data)=>{ return axios.post('api/rate/addChangeRate
 // 批量新增或修改店铺信息(flag : 1.新增 2.修改 )
 const finance_shopAddOrUpd= (data)=>{ return axios.post('api/Shop/AddOrUpd',data)}
 // /Shop/list 店铺信息列表
-const finance_shopList= (data)=>{ return axios.get('api/Shop/list',{params:data })}
+const finance_shopList= (data)=>{ return axios.get('api/Shop/shopList',{params:data })}
 //  Shop/selectByPrimaryKey 店铺信息模糊查询
 const finance_shopSearch= (data)=>{ return axios.get('api/Shop/selectByPrimaryKey',{params:data})}
 
@@ -124,14 +128,14 @@ const finance_shopSearch= (data)=>{ return axios.get('api/Shop/selectByPrimaryKe
 // 批量新增或修改店铺信息(flag : 1.新增 2.修改 )
 const finance_shopgroupAddOrUpd= (data)=>{ return axios.post('api/Shopgroup/AddOrUpd',data)}
 // /Shopgroup/list 店铺组别信息列表
-const finance_shopgroupList= (data)=>{ return axios.get('api/Shopgroup/list',{params:data})}
+const finance_shopgroupList= (data)=>{ return axios.get('api/Shopgroup/shopgroupList',{params:data})}
 //  Shopgroup/selectByPrimaryKey 店铺组别模糊查询
 const finance_shopgroupSearch= (data)=>{ return axios.get('api/Shopgroup/selectByPrimaryKey',{params:data })}
 
 
 //平台
 // /Shopgroup/list 平台信息列表
-const finance_platformList= (data)=>{ return axios.get('api/Platform/list',{params:data})}
+const finance_platformList= (data)=>{ return axios.get('api/Platform/platformList',{params:data})}
 //Platform/delete 批量删除平台信息
 const finance_platformDelete= (data)=>{ return axios.delete('api/Platform/delete',{params:data})}
 //Platform/AddOrUpd 批量新增或修改平台信息(flag : 1.新增 2.修改 )
@@ -146,7 +150,7 @@ const finance_platformSearch= (data)=>{ return axios.get('api/Platform/selectByP
 //Department/Add 批量新增销售部门
 const finance_DepartmentAdd= (data)=>{ return axios.post('api/Department/Add',data)}
 //Department/list 销售部门信息列表
-const finance_DepartmentList= (data)=>{ return axios.get('api/Department/list',{params:data})}
+const finance_DepartmentList= (data)=>{ return axios.get('api/Department/departmentList',{params:data})}
 //Department/selectByPrimaryKey 销售部门模糊查询
 const finance_DepartmentSearch= (data)=>{ return axios.get('api/Department/selectByPrimaryKey',{params:data})}
 
@@ -213,7 +217,75 @@ const getKisBill =(params)=>axios.get("api/KisBill/getKisBill",{params})
 const updBill =(params)=>axios.get("api/KisBill/updBill",{params})
 
 
+//"发货数据下载权限配置"
+//DownloadPermission/selectByPrimaryKey 财务下载权限管理分页数据列表,模糊查询
+const permissionList =(params)=>axios.get("api/DownloadPermission/selectByPrimaryKey",{params})
 
+//DownloadPermission/insert 新增
+const permissionInset =(params)=>axios.get("api/DownloadPermission/insert",{params})
+
+//DownloadPermission/delete 删除
+const permissionDelete =(params)=>axios.get("api/DownloadPermission/delete",{params})
+
+//DownloadPermission/update 修改
+const permissionUpdate =(params)=>axios.get("api/DownloadPermission/update",{params})
+
+
+//"取日进毛利的配置"
+
+//GrossConfig/selectByPrimaryKey 取日进毛利的配置分页数据列表,模糊查询
+const grossConfigList =(params)=>axios.get("api/GrossConfig/selectByPrimaryKey",{params})
+
+//GrossConfig/insert 新增
+const grossConfigInset =(params)=>axios.get("api/GrossConfig/insert",{params})
+
+//GrossConfig/delete 删除
+const grossConfigDelete =(params)=>axios.get("api/GrossConfig/delete",{params})
+
+//GrossConfig/update 修改
+const grossConfigUpdate =(params)=>axios.get("api/GrossConfig/update",{params})
+
+
+
+//Api/selectByPrimaryKey  api退款数据列表,参数查询
+const apiDataLists =(params)=>axios.get("api/Api/selectByPrimaryKey",{params})
+const getSearchs =(params)=>axios.get("api/Api/refundLogin",{params})
+
+
+
+//物流对账
+//shipmentBill/configListpage 物流对账 分页列表
+const shipmentBillLists =(params)=>axios.post("api/shipmentBill/configListpage",params)
+
+//shipmentBill/delete 物流对账--删除
+const shipmentBillDelect =(params)=>axios.delete("api/shipmentBill/delete",{data:params})
+
+//shipmentBill/getParseLog 物流对账--查看解析日志
+const shipmentBillLog =(params)=>axios.get("api/shipmentBill/getParseLog",{params})
+
+//仓库人力成本配置
+///inventoryCost/configListpage 仓库人力成本配置 分页列表
+const inventList =(params)=>axios.post("api/inventoryCost/configListpage ",params)
+
+//inventoryCost/delete仓库人力成本配置--删除
+const inventDelete =(params)=>axios.delete("api/inventoryCost/delete",{data:params})
+
+
+//SendDownload/queryCount 查询
+const queryCount = (params)=>axios.get("api/SendDownload/queryCount",{params})
+//SendDownload/sendLogin 进界面
+const sendLogin = (params)=>axios.get("api/SendDownload/sendLogin",{params})
+
+//SendDownload/expressTypeList 通过承运商查询货运方式
+const expressTypeList = (params)=>axios.get("api/SendDownload/expressTypeList",{params})
+
+
+//smtExpress/configListpage SmtExpress 分页列表
+const smtExpressList = (params)=>axios.post("api/smtExpress/configListpage",params)
+//smtExpress/delete SmtExpress--删除
+const smtExpressDelete =(params)=>axios.delete("api/smtExpress/delete",{data:params})
+//smtExpress/smtExpressDetail SmtExpressDetail--放大镜功能
+const smtExpressDetail = (params)=>axios.get("api/smtExpress/smtExpressDetail",{params})
 
 
 
@@ -284,8 +356,28 @@ export {
     deleteFreeIncome,
     insertFreeIncome,
     getKisBill,
-    updBill
-
-
+    updBill,
+    permissionList,
+    permissionUpdate,
+    permissionDelete,
+    permissionInset,
+    getUserProperties,
+    apiDataLists,
+    getSearchs,
+    shipmentBillDelect,
+    shipmentBillLists,
+    shipmentBillLog,
+    inventList,
+    inventDelete,
+    grossConfigList,
+    grossConfigInset,
+    grossConfigDelete,
+    grossConfigUpdate,
+    queryCount,
+    sendLogin,
+    expressTypeList,
+    smtExpressList,
+    smtExpressDelete,
+    smtExpressDetail,
 
 }

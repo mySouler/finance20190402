@@ -150,6 +150,9 @@
               }
             },
             async deled(){
+               if(this.multipleSelection.length === 0){
+                  return this.$message.error("请选择要删除的数据")
+                }
                 let str = this.multipleSelection+''
                 let params = {}
                 params.serial = str

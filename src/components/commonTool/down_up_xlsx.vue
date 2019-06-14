@@ -1,13 +1,13 @@
 <template>
     <div class="down_up">
-        <el-dialog :title="title" 
+        <el-dialog :title="title"
             :visible.sync="switchStatus"
             @close="$emit('update:centerDialogVisible', false)"
             width="450px" center>
-            <p>
+            <p v-if="downPath">
                 <a href="javascript:;" @click="downLoad" >下载模板<slot></slot></a>
             </p>
-            
+
             <div>
                 <el-upload class="upload"
                 ref="upload"
@@ -17,8 +17,8 @@
                 :on-error="uploadError"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
-                :before-remove="beforeRemove" 
-                :on-exceed="handleExceed" 
+                :before-remove="beforeRemove"
+                :on-exceed="handleExceed"
                 :http-request="uploadFun"
                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                 :file-list="fileList">
@@ -45,11 +45,11 @@
                 title:this.propData.title,
                 downPath:this.propData.downPath,
                 downName:this.propData.downName || "下载",
+                type:this.propData.type||"post",
             }
         },
         props: {
             propData:{
-                type:Object,
                 default:function(){
                     return {
                         url:"",//上传路径
@@ -60,6 +60,7 @@
                     }
                 }
             },
+
             centerDialogVisible:{
                 type:Boolean,
                 default:false
@@ -73,11 +74,12 @@
                 this.switchStatus = val
             },
             propData: {
-                handler: function (val, oldVal) { 
+                handler: function (val, oldVal) {
                     console.log(val,'valvalvalval');
                     this.sendtype = val.sendtype,
                     this.url = val.url,
                     this.title = val.title
+                    this.type = val.type
                     this.downPath = val.downPath
                     this.downName = val.downName || "下载"
                 },
@@ -86,41 +88,44 @@
         },
         methods: {
             downLoad:function(){
-                
+
                 this.$common.downloadExcl_get(this.downPath,{},this.downName,this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
             },
             uploadFun:function(content){
                 let that = this
-                
+
                 let token = sessionStorage.getItem('token')
-                
+
                 let param = new FormData()  // 创建form对象
-                param.append('file', content.file)  
+                param.append('file', content.file)
                 if(this.sendtype){
-                    param.append('flag', this.sendtype) 
+                    param.append('flag', this.sendtype)
                 }
                 let config = {
                     headers: {'Content-Type': 'multipart/form-data'}
                 }
-                this.$http[this.propData.type](this.url,param, config).then((res) => {
+
+                this.$http[this.type](this.url,param, config).then((res) => {
                     console.log(res,'resresresres');
                     if (res.code == 200) {
                         this.$message.success(res.message)
+
                     } else {
                         this.$message.error(res.message)
                     }
+                    that.$emit("successInfo",res.message)
                     setTimeout(()=>{
                         this.switchStatus = false
-                    },2000)
+                    },1000)
                 }).catch(err => {
                     console.log(err,'uploadFun');
-                    
+
                 })
                 return false
             },
             submitUpload: function() {
                 this.$refs.upload.submit();
-                
+
 
                 this.fileList = [];
             },
@@ -150,7 +155,7 @@
             handleExceed(files, fileList) {
                 this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
             },
-            
+
         }
     }
 </script>

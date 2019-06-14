@@ -86,8 +86,28 @@ dl {
   cursor: pointer;
 }
 
+input::-webkit-input-placeholder { /* WebKit browsers */
+  font-size: 14px;
+}
 
+input::-moz-placeholder { /* Mozilla Firefox 19+ */
+  font-size: 14px;
+}
 
+input:-ms-input-placeholder { /* Internet Explorer 10+ */
+  font-size: 14px;
+}
+.el-input__inner::-webkit-input-placeholder { /* WebKit browsers */
+  font-size: 14px;
+}
+
+.el-input__inner::-moz-placeholder { /* Mozilla Firefox 19+ */
+  font-size: 14px;
+}
+
+.el-input__inner:-ms-input-placeholder { /* Internet Explorer 10+ */
+  font-size: 14px;
+}
 
 
 .el-table thead tr {
@@ -163,6 +183,15 @@ dl {
   vertical-align: top;
 }
 
+
+
+.el-notification.right{
+  top: 50% !important;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+}
 
 
 #load_warp {

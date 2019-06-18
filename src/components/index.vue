@@ -96,7 +96,7 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
         let name = this.$route.name
         let path = this.$route.path
         this.menuListFun()   //菜单
-        this.getMenu()
+        // this.getMenu()
     },
     computed:{
         ...mapState({
@@ -150,13 +150,13 @@ import {finance_loginOut,finance_menuList,finance_queryByUser} from "@/http/api"
           }
         })
       },
-      async getMenu(){
-        try{
-        }catch(err){
-          console.log("TCL: getMenu -> err", err)
+      // async getMenu(){
+      //   try{
+      //   }catch(err){
+      //     console.log("TCL: getMenu -> err", err)
 
-        }
-      },
+      //   }
+      // },
       clearAll(){
         this.$store.state.menuNav.editableTabs2 =[]
       },

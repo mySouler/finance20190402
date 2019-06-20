@@ -288,6 +288,10 @@ const smtExpressDelete =(params)=>axios.delete("api/smtExpress/delete",{data:par
 const smtExpressDetail = (params)=>axios.get("api/smtExpress/smtExpressDetail",{params})
 
 
+//IncomeConfig/orderTypeList 查询全部订单属性
+const orderTypeList = (params)=>axios.get("api/IncomeConfig/orderTypeList",{params})
+
+
 
 export {
 
@@ -379,5 +383,6 @@ export {
     smtExpressList,
     smtExpressDelete,
     smtExpressDetail,
+    orderTypeList
 
 }

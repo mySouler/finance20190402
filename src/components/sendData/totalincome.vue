@@ -6,7 +6,16 @@
 
 
                 <el-form-item label="订单属性">
-                    <el-input v-model.trim="formData.ordertype"></el-input>
+                    <el-select
+                        v-model="formData.ordertype"
+                        placeholder="请选择">
+                        <el-option
+                          v-for="(item,index) in ordertypeData"
+                          :key="index"
+                          :label="item"
+                          :value="item">
+                        </el-option>
+                      </el-select>
                 </el-form-item>
 
                 <el-form-item>
@@ -40,7 +49,16 @@
               <el-form :inline="true" :model="addFrom" class="rightPanel demo-form-inline text-left" label-width="100px">
 
                 <el-form-item label="订单属性">
-                    <el-input v-model.trim="addFrom.ordertype"></el-input>
+                    <el-select
+                        v-model="addFrom.ordertype"
+                        placeholder="请选择">
+                        <el-option
+                          v-for="(item,index) in ordertypeData"
+                          :key="index"
+                          :label="item"
+                          :value="item">
+                        </el-option>
+                      </el-select>
                 </el-form-item>
             </el-form>
               <span slot="footer" class="dialog-footer">
@@ -55,7 +73,7 @@
     </div>
 </template>
 <script>
-    import {selectByPrimaryKeyFreeIncome,deleteFreeIncome,insertFreeIncome} from "@/http/api"
+    import {selectByPrimaryKeyFreeIncome,deleteFreeIncome,insertFreeIncome,orderTypeList} from "@/http/api"
     import pageTool from "@/components/commonTool/pageTool";
     export default {
         data() {
@@ -93,6 +111,7 @@
                 visible:false,
                 multipleSelection:[],
                 openAdd:false,
+                ordertypeData:[]
             }
         },
         components:{
@@ -101,6 +120,7 @@
         created() {
 
             this.getfreeList()
+            this.getOrdertype()
 
         },
         mounted() {
@@ -132,6 +152,16 @@
             addPanel(){
               this.openAdd = true
               this.addFrom = {}
+            },
+            async getOrdertype(){
+                try{
+                  let data = await orderTypeList()
+                  console.log(data,'data');
+
+                  this.ordertypeData = data
+                }catch(error){
+
+                }
             },
             async addData(){
               let addFrom = this.addFrom
@@ -245,7 +275,7 @@
                 border-color: rgba(22, 202, 225, 1);
                 color: rgb(22, 202, 225);
     .addFrom
-      >>>.el-form-item
+      >>>.el-form-item,>>>.el-select
         width:100%
       >>>.el-form-item__content
         width:65%

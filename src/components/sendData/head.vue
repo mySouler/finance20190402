@@ -50,7 +50,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="handleTime" label="操作时间"></el-table-column>
-                <el-table-column prop="handleTime" label="操作人"></el-table-column>
+                <el-table-column prop="username" label="操作人"></el-table-column>
             </el-table>
             <pageTool :pageData="headList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 

@@ -26,6 +26,7 @@
             <el-button  size="small" @click="down" >下载</el-button>
 
         </div>
+
         <div class="item orderTable  bgc_white mt_20">
             <el-table stripe :data="inventLists.records" class="warehouse"  style="width: 100%;" highlight-current-row
                 border @selection-change="handleSelectionChange">
@@ -36,35 +37,35 @@
                   </el-table-column>
                 </el-table-column>
                 <el-table-column prop="offer" align="center" label="正式工">
-                  <el-table-column prop="strOffercialCount" label="实际出勤人数">
+                  <el-table-column prop="offercialCount" label="实际出勤人数">
 
                   </el-table-column>
-                  <el-table-column prop="strOffercialHour" label="实际出勤总工时">
+                  <el-table-column prop="offercialHour" label="实际出勤总工时">
 
                   </el-table-column>
-                  <el-table-column prop="strOffercialAvg" label="均工价">
+                  <el-table-column prop="offercialAvg" label="均工价">
 
                   </el-table-column>
-                  <el-table-column prop="strOffercialCost" label="人力成本">
+                  <el-table-column prop="offercialCost" label="人力成本">
 
                   </el-table-column>
                 </el-table-column>
                 <el-table-column prop="offer" align="center" label="长期工">
-                  <el-table-column prop="strLongCount" label="实际出勤人数">
+                  <el-table-column prop="longCount" label="实际出勤人数">
 
                   </el-table-column>
-                  <el-table-column prop="strLongHour" label="实际出勤总工时">
+                  <el-table-column prop="longHour" label="实际出勤总工时">
 
                   </el-table-column>
-                  <el-table-column prop="strLongAvg" label="均工价">
+                  <el-table-column prop="longAvg" label="均工价">
 
                   </el-table-column>
-                  <el-table-column prop="strLongCost" label="人力成本">
+                  <el-table-column prop="longCost" label="人力成本">
 
                   </el-table-column>
                 </el-table-column>
                 <el-table-column  >
-                  <el-table-column prop="strGroupCost" label="组人力成本">
+                  <el-table-column prop="groupCost" label="组人力成本">
 
                   </el-table-column>
                   <el-table-column prop="times" label="时间">

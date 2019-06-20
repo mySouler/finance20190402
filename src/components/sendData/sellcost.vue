@@ -47,7 +47,7 @@
                 <el-table-column prop="department" label="部门"></el-table-column>
                 <el-table-column prop="bloc" label="集团"></el-table-column>
                 <el-table-column prop="platform" label="平台"></el-table-column>
-                <el-table-column prop="strSellCost" label="销售人力成本/天"></el-table-column>
+                <el-table-column prop="sellCost" label="销售人力成本/天"></el-table-column>
                 <el-table-column prop="time" label="年月"></el-table-column>
                 <el-table-column prop="userTime" label="新增时间">
                 </el-table-column>
@@ -101,7 +101,7 @@
                     downPath:"",
                 },
                 visible:false,
-                fileName:"头程配置表--模板下载.xls",
+                fileName:"销售人力成本配置.xls",
                 multipleSelection:[]
             }
         },

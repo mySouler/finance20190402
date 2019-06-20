@@ -4,11 +4,8 @@
 
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
                 <el-form-item label="部门">
-                    <el-input v-model.trim="formData.groups"></el-input>
+                    <el-input v-model.trim="formData.department"></el-input>
                 </el-form-item>
-
-
-
                 <el-form-item>
                     <el-button class="search" @click="getInventList" size="medium">查询</el-button>
                     <el-button @click="resetForm" size="small" type="text" class="btn_text">清空</el-button>

@@ -37,16 +37,76 @@
                 <el-table-column prop="deptname" label="部门"></el-table-column>
                 <el-table-column prop="ptName" label="平台"></el-table-column>
                 <el-table-column prop="groupName" label="组别"></el-table-column>
-                <el-table-column prop="refundRate" label="退款率"></el-table-column>
-                <el-table-column prop="publicationRate" label="刊登费率"></el-table-column>
-                <el-table-column prop="inventoryprofitandlossRate" label="库存损益率"></el-table-column>
-                <el-table-column prop="vatTax" label="VAT报税"></el-table-column>
-                <el-table-column prop="marketingcost" label="营销费率"></el-table-column>
-                <el-table-column prop="friedpoints" label="炒分费用"></el-table-column>
-                <el-table-column prop="vpsplatformspecific" label="VPS及平台推广费率"></el-table-column>
-                <el-table-column prop="platformRate" label="平台费率"></el-table-column>
-                <el-table-column prop="collectionRate" label="收款费率"></el-table-column>
-                <el-table-column prop="fundRate" label="资金费率"></el-table-column>
+                <el-table-column prop="refundRate" label="退款率">
+                  <template slot-scope="scope">
+                    <div>
+                      {{(scope.row.refundRate || 0)*1000/10+ "%"}}
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="publicationRate" label="刊登费率">
+                  <template slot-scope="scope">
+                    <div>
+                      {{(scope.row.publicationRate || 0)*1000/10+ "%"}}
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="inventoryprofitandlossRate" label="库存损益率">
+                   <template slot-scope="scope">
+                    <div>
+                      {{(scope.row.inventoryprofitandlossRate || 0)*1000/10 + "%"}}
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="vatTax" label="VAT报税">
+                   <template slot-scope="scope">
+                    <div>
+                      {{(scope.row.vatTax || 0)*1000/10+ "%"}}
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="marketingcost" label="营销费率">
+                   <template slot-scope="scope">
+                    <div>
+                      {{(scope.row.marketingcost || 0) *1000/10+ "%"}}
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="friedpoints" label="炒分费用">
+                   <template slot-scope="scope">
+                    <div>
+                      {{(scope.row.friedpoints || 0)*1000/10+ "%"}}
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="vpsplatformspecific" label="VPS及平台推广费率">
+                   <template slot-scope="scope">
+                    <div>
+                      {{(scope.row.vpsplatformspecific || 0)*1000/10+ "%"}}
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="platformRate" label="平台费率">
+                   <template slot-scope="scope">
+                    <div>
+                      {{(scope.row.platformRate || 0)*1000/10+ "%"}}
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="collectionRate" label="收款费率">
+                   <template slot-scope="scope">
+                    <div>
+                      {{(scope.row.collectionRate || 0)*10000/100+ "%"}}
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="fundRate" label="资金费率">
+                   <template slot-scope="scope">
+                    <div>
+                      {{(scope.row.fundRate || 0)*1000/10+ "%"}}
+                    </div>
+                  </template>
+                </el-table-column>
                 <el-table-column prop="userName" label="操作人"></el-table-column>
                 <el-table-column prop="userTime" label="操作时间"></el-table-column>
             </el-table>

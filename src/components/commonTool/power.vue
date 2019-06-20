@@ -101,7 +101,7 @@
         })
         console.log("TCL: updateData -> chooseData updateData",this.allCheckData)
         console.log("TCL: updateData -> chooseData updateData chooseData + ''",this.allCheckData + '')
-        return
+
         try {
           let params = {}
           params[this.type] = this.id

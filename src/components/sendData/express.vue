@@ -11,7 +11,16 @@
                 </el-form-item>
 
                 <el-form-item label="订单属性">
-                    <el-input v-model.trim="formData.ordertype"></el-input>
+                      <el-select
+                        v-model="formData.ordertype"
+                        placeholder="请选择">
+                        <el-option
+                          v-for="(item,index) in ordertypeData"
+                          :key="index"
+                          :label="item"
+                          :value="item">
+                        </el-option>
+                      </el-select>
                 </el-form-item>
 
                 <el-form-item>
@@ -53,11 +62,20 @@
                 </el-form-item>
 
                 <el-form-item label="订单属性">
-                    <el-input v-model.trim="addFrom.ordertype"></el-input>
+                    <el-select
+                        v-model="addFrom.ordertype"
+                        placeholder="请选择">
+                        <el-option
+                          v-for="(item,index) in ordertypeData"
+                          :key="index"
+                          :label="item"
+                          :value="item">
+                        </el-option>
+                      </el-select>
                 </el-form-item>
             </el-form>
             <p>
-              注：1.平台、货运方式、订单属性，必须填一个，才可可存
+              注：1.平台、货运方式、订单属性，必须填一个，才可保存
 
 
             </p>
@@ -77,7 +95,7 @@
     </div>
 </template>
 <script>
-    import {selectByPrimaryKeyFree,deleteFree,insertFree} from "@/http/api"
+    import {selectByPrimaryKeyFree,deleteFree,insertFree,orderTypeList} from "@/http/api"
     import pageTool from "@/components/commonTool/pageTool";
     export default {
         data() {
@@ -116,6 +134,7 @@
                 fileName:"头程配置表--模板下载.xls",
                 multipleSelection:[],
                 openAdd:false,
+                ordertypeData:[],
             }
         },
         components:{
@@ -124,6 +143,7 @@
         created() {
 
             this.getfreeList()
+            this.getOrdertype()
 
         },
         mounted() {
@@ -156,9 +176,21 @@
               this.openAdd = true
               this.addFrom = {}
             },
+            async getOrdertype(){
+                try{
+                  let data = await orderTypeList()
+                  console.log(data,'data');
+
+                  this.ordertypeData = data
+                }catch(error){
+
+                }
+            },
             async addData(){
               let addFrom = this.addFrom
-              if(!addFrom.expressType || !addFrom.ordertype || !addFrom.platform ){
+              if(addFrom.expressType || addFrom.ordertype || addFrom.platform ){
+
+              }else{
                 return this.$message.error("平台、货运方式、订单属性，必须填一个")
               }
               try{
@@ -268,7 +300,7 @@
                 border-color: rgba(22, 202, 225, 1);
                 color: rgb(22, 202, 225);
     .addFrom
-      >>>.el-form-item
+      >>>.el-form-item,>>>.el-select
         width:100%
       >>>.el-form-item__content
         width:65%

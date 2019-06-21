@@ -28,7 +28,7 @@
             <pageTool :pageData="roleData"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
         </div>
-        <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
+        <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
             <strong>{{fileName}}</strong>
         </downUp>
         <div class="myDialog staff">

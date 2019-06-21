@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="department">
-            
+
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
                 <el-form-item label="币种">
                     <el-input v-model.trim="formData.currency"></el-input>
@@ -27,9 +27,9 @@
                 <el-table-column prop="rate" label="汇率"></el-table-column>
                 <el-table-column prop="dollarRate" label="美元汇率"></el-table-column>
                 <el-table-column prop="curChineseName" label="中文名称"></el-table-column>
-                
+
                 <el-table-column prop="monthRate" label="月均汇率">
-                    
+
                 </el-table-column>
                 <el-table-column label="状态">
                     <template slot-scope="scope" >
@@ -39,11 +39,11 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="userTime" label="操作时间">
-                    
+
                 </el-table-column>
-        
+
                 <el-table-column prop="userName" label="操作人">
-                    
+
                 </el-table-column>
                 <el-table-column   prop="purchasework" label="操作">
                     <template slot-scope="scope" >
@@ -54,15 +54,15 @@
                 </el-table-column>
             </el-table>
             <pageTool :pageData="rateList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
-            
-            <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
+
+            <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
-        
+
         <div class="myDialog">
 
-        
+
         <el-dialog
         title="编辑"
         :visible.sync="add"
@@ -85,7 +85,7 @@
             <el-radio v-model.trim="sendData.status" :label="1">启用</el-radio>
             <el-radio v-model.trim="sendData.status" :label="0">停用</el-radio>
         </el-form-item>
-    
+
         </el-form>
 
 
@@ -148,7 +148,7 @@
                 })
 				console.log("TCL: handleSelectionChange -> this.multipleSelection", val,this.multipleSelection)
 				console.log("TCL: handleSelectionChange -> this.multipCoin", val,this.multipCoin)
-                
+
             },
             getPage(val){
                 console.log(val,'getPage');
@@ -166,7 +166,7 @@
                 this.sendData.url = "api/rate/excel/import"
                 this.sendData.type = "post"
                 this.sendData.downName = "rateTemplate"
-                
+
                 if(val == 1){
                     this.sendData.sendtype = 1
                     this.sendData.title = "批量上传"
@@ -211,7 +211,7 @@
                 let params =''
                 let ids = {idrateIds:str}
                 str.length == 0 ? '' : params = Object.assign({},ids)
-                
+
                 this.$common.downloadExcl_post("api/rate/export",params,"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
             },
             async getRate(){
@@ -221,26 +221,26 @@
                     console.log("data ====",data)
                     if(data.success){
                         this.rateList = data.result
-                        
+
                     }
                 }catch(err){
                     console.log(err)
                 }
             },
-            
+
             rateLog(){
-                
+
                 let obj = {
                     name:"日志",
                     path:"/rateLog",
                     args:this.multipCoin
                 }
-                
-				
+
+
                 this.$store.commit('addTab',obj)
-                
+
             },
-        
+
 
             resetForm: function () { // 清空表单条件
                 for (let key in this.formData) {

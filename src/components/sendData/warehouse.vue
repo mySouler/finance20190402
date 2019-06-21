@@ -8,7 +8,7 @@
                 </el-form-item>
 
                 <el-form-item label="时间">
-                  <el-date-picker v-model="formData.times"  value-format="yyyy-MM-dd HH:mm:ss" type="datetime"></el-date-picker>
+                  <el-date-picker v-model="formData.times"  value-format="yyyy-MM-dd" type="date"></el-date-picker>
                 </el-form-item>
 
                 <el-form-item>
@@ -76,7 +76,7 @@
             </el-table>
             <pageTool :pageData="inventLists"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
-            <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -138,15 +138,13 @@
             getPage(val){
                 console.log(val,'getPage');
                 this.pageData.current = val
-                // this.getconfigList()
-                this.search()
+                this.getInventList()
 
             },
             getSize(val){
                 console.log(val,'getSize');
                 this.pageData.size = val
-                // this.getconfigList()
-                this.search()
+                this.getInventList()
             },
               // 上传函数
             uploadFun(val){

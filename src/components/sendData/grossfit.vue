@@ -112,7 +112,7 @@
             </el-table>
             <pageTool :pageData="configList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
-            <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -175,15 +175,14 @@
             getPage(val){
                 console.log(val,'getPage');
                 this.pageData.current = val
-                // this.getconfigList()
-                this.search()
+                this.getConfigListpage();
 
             },
             getSize(val){
                 console.log(val,'getSize');
                 this.pageData.size = val
-                // this.getconfigList()
-                this.search()
+                this.getConfigListpage();
+
             },
               // 上传函数
             uploadFun(val){
@@ -240,7 +239,10 @@
             },
             async getConfigListpage(){
 
-                let arg = Object.assign({},this.pageData,this.formData)
+                let arg = Object.assign({},this.formData)
+                console.log('=========arg===========================');
+                console.log(arg);
+                console.log('=============arg=======================');
                 try{
                     let data = await finance_configListpage(arg);
                     console.log("data ====",data)

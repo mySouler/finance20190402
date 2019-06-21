@@ -104,7 +104,6 @@
   } from "@/http/api"
   import pageTool from "@/components/commonTool/pageTool";
   import power from "@/components/commonTool/power";
-  import downUp from "@/components/commonTool/down_up_xlsx";
   export default {
     data() {
       return {
@@ -174,7 +173,6 @@
     },
     components: {
       pageTool,
-      downUp,
       power
     },
     mounted() {

@@ -55,7 +55,7 @@
             </el-table>
             <pageTool :pageData="configList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
-            <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp  v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -128,15 +128,13 @@
             getPage(val){
                 console.log(val,'getPage');
                 this.pageData.current = val
-                // this.getconfigList()
-                this.search()
-
+                this.getconfigListpage();
             },
             getSize(val){
                 console.log(val,'getSize');
                 this.pageData.size = val
-                // this.getconfigList()
-                this.search()
+                this.getconfigListpage();
+
             },
               // 上传函数
             uploadFun(val){

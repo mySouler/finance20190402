@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="department">
-            
+
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
                 <el-form-item label="组别名称">
                     <el-input v-model.trim="formData.name"></el-input>
@@ -43,7 +43,7 @@
             </el-table>
             <pageTool :pageData="shopgroupData"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
         </div>
-        <downUp   :propData="sendData" :centerDialogVisible.sync="visible"  >
+        <downUp v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible"  >
             <strong>{{fileName}}</strong>
         </downUp>
     </div>
@@ -102,12 +102,12 @@
                     this.multipleSelection.push( `'${v.id}'`)
                 })
 				console.log("TCL: handleSelectionChange -> this.multipleSelection", val,this.multipleSelection)
-                
+
             },
             getPage(val){
                 console.log(val,'getPage');
                 this.pageData.current = val
-                
+
                 this.onSubmit()
             },
             getSize(val){
@@ -123,7 +123,7 @@
                 if(val == 1){
                     this.sendData.sendtype = 1
                     this.sendData.title = "批量上传"
-                    
+
                 }else{
                     this.sendData.sendtype = 2
                     this.sendData.title = "批量修改"
@@ -154,7 +154,7 @@
                 return date[0]+'*'+date[1]
                 }
             },
-            
+
             resetForm: function () { // 清空表单条件
                 for (let key in this.formData) {
                 this.formData[key] = ''

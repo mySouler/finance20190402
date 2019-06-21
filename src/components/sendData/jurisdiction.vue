@@ -162,15 +162,13 @@
             getPage(val){
                 console.log(val,'getPage');
                 this.pageData.current = val
-                // this.getconfigList()
-                this.search()
-
+                this.getPermissionList()
             },
             getSize(val){
                 console.log(val,'getSize');
                 this.pageData.size = val
-                // this.getconfigList()
-                this.search()
+                this.getPermissionList()
+
             },
             async departmentList(){
               let data = await finance_DepartmentList()
@@ -194,10 +192,6 @@
 
               }
             },
-
-
-
-
             async add(val,data){
                 let that = this;
                 this.openDailog = true;

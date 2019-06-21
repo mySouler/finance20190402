@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="department">
-            
+
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
                 <el-form-item label="部门">
                     <el-input v-model.trim="formData.department"></el-input>
@@ -24,16 +24,16 @@
                 <el-table-column   type="selection"    width="50"> </el-table-column>
                 <el-table-column prop="department" label="部门"></el-table-column>
                 <el-table-column prop="usertime" label="操作时间">
-                    
+
                 </el-table-column>
                 <el-table-column prop="username" label="操作人">
-                    
+
                 </el-table-column>
             </el-table>
             <pageTool :pageData="departmentData"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
         </div>
-        <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
+        <downUp  v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
             <strong>{{fileName}}</strong>
         </downUp>
         </div>
@@ -44,7 +44,7 @@
     import pageTool from "@/components/commonTool/pageTool";
     import downUp from "@/components/commonTool/down_up_xlsx";
 
-    
+
     export default {
         data() {
             return {
@@ -83,7 +83,7 @@
                 this.currentRow = val;
             },
             handleSelectionChange(){
-                
+
             },
             getPage(val){
                 console.log(val,'getPage');
@@ -112,7 +112,7 @@
                     this.multipleSelection.push( `'${v.department}'`)
                 })
 				console.log("TCL: handleSelectionChange -> this.multipleSelection",val,this.multipleSelection)
-                
+
             },
             down(){
                 let str = this.multipleSelection+''
@@ -124,10 +124,10 @@
                 try{
                     let data = await finance_DepartmentSearch(params)
                     this.departmentData = data
-                    
+
                 }catch(err){
 					console.log("TCL: finance_platformSearch -> err", err)
-                    
+
                 }
             },
             resetForm: function () { // 清空表单条件

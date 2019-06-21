@@ -162,7 +162,7 @@ const finance_DepartmentSearch= (data)=>{ return axios.get('api/Department/selec
 
 //dailyMargin/configListpage 日进订单毛利配置 分页列表
 
-const finance_configListpage = (data)=>axios.post("api/dailyMargin/configListpage",data)
+const finance_configListpage = (data,obj)=>axios.post("api/dailyMargin/configListpage",data)
 
 //dailyMargin/delete 日进毛利配置--删除
 
@@ -291,6 +291,8 @@ const smtExpressDetail = (params)=>axios.get("api/smtExpress/smtExpressDetail",{
 //IncomeConfig/orderTypeList 查询全部订单属性
 const orderTypeList = (params)=>axios.get("api/IncomeConfig/orderTypeList",{params})
 
+//FreightConfig/platformAndExpressType 平台,货运方式数据
+const platformAndExpressType = (params)=>axios.get("api/FreightConfig/platformAndExpressType",{params})
 
 
 export {
@@ -383,6 +385,7 @@ export {
     smtExpressList,
     smtExpressDelete,
     smtExpressDetail,
-    orderTypeList
+    orderTypeList,
+    platformAndExpressType
 
 }

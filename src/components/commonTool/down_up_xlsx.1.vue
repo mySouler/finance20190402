@@ -7,7 +7,6 @@
             <p v-if="downPath">
                 <a href="javascript:;" @click="downLoad" >下载模板<slot></slot></a>
             </p>
-
             <div>
                 <el-upload class="upload"
                 ref="upload"
@@ -73,7 +72,21 @@
           console.log('============ propData========================');
         },
         watch:{
-
+            centerDialogVisible (val) {
+                this.switchStatus = val
+            },
+            propData: {
+                handler: function (val, oldVal) {
+                    console.log(val,'valvalvalval');
+                    this.sendtype = val.sendtype,
+                    this.url = val.url,
+                    this.title = val.title
+                    this.type = val.type
+                    this.downPath = val.downPath
+                    this.downName = val.downName || "下载"
+                },
+                deep: true
+            },
         },
         methods: {
             downLoad:function(){

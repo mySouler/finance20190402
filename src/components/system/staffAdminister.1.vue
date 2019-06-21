@@ -134,7 +134,6 @@
 <script>
     import {finance_saffList,finance_userEdit,finance_userAdd,finance_treeList,finance_userDepartList,finance_departmens,finance_userPermission,finance_updateUserPermission} from "@/http/api"
     import pageTool from "@/components/commonTool/pageTool";
-    import downUp from "@/components/commonTool/down_up_xlsx";
     export default {
         data() {
             return {
@@ -203,7 +202,6 @@
         },
         components:{
             pageTool,
-            downUp
         },
         mounted() {
 

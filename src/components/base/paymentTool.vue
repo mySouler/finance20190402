@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="department">
-            
+
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
                 <el-form-item label="收款工具">
                     <el-input v-model.trim="formData.paymentTool"></el-input>
@@ -40,15 +40,15 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="operatingTime" label="操作时间">
-                    
+
                 </el-table-column>
                 <el-table-column prop="operationPeople" label="操作人">
-                    
+
                 </el-table-column>
             </el-table>
             <pageTool :pageData="payList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
-            
-            <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
+
+            <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -102,18 +102,18 @@
                     this.multipleSelection.push( `'${v.paymentToolId}'`)
                 })
 				console.log("TCL: handleSelectionChange -> this.multipleSelection", val,this.multipleSelection)
-                
+
             },
             getPage(val){
                 console.log(val,'getPage');
                 this.pageData.current = val
-                
+
                 this.search()
             },
             getSize(val){
                 console.log(val,'getSize');
                 this.pageData.size = val
-                
+
                 this.search()
             },
               // 上传函数
@@ -138,7 +138,7 @@
 
             },
             down(){
-                
+
                 let str = this.multipleSelection+''
                 let params = Object.assign({},this.formData,{paymentToolId:str})
                 this.$common.downloadExcl_get("api/paymentTool/export",params,"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))

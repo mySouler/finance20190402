@@ -55,10 +55,28 @@
 
               <el-form :inline="true" :model="addFrom" class="rightPanel demo-form-inline text-left" label-width="100px">
                 <el-form-item label="平台">
-                    <el-input v-model.trim="addFrom.platform"></el-input>
+                    <el-select
+                        v-model="addFrom.platform"
+                        placeholder="请选择">
+                        <el-option
+                          v-for="(item,index) in initList.platformmentList"
+                          :key="index"
+                          :label="item"
+                          :value="item">
+                        </el-option>
+                      </el-select>
                 </el-form-item>
                 <el-form-item label="货运方式">
-                    <el-input v-model.trim="addFrom.expressType"></el-input>
+                    <el-select
+                        v-model="addFrom.expressType"
+                        placeholder="请选择">
+                        <el-option
+                          v-for="(item,index) in initList.expressTypeList"
+                          :key="index"
+                          :label="item"
+                          :value="item">
+                        </el-option>
+                      </el-select>
                 </el-form-item>
 
                 <el-form-item label="订单属性">
@@ -95,7 +113,7 @@
     </div>
 </template>
 <script>
-    import {selectByPrimaryKeyFree,deleteFree,insertFree,orderTypeList} from "@/http/api"
+    import {selectByPrimaryKeyFree,deleteFree,insertFree,orderTypeList,platformAndExpressType} from "@/http/api"
     import pageTool from "@/components/commonTool/pageTool";
     export default {
         data() {
@@ -135,6 +153,7 @@
                 multipleSelection:[],
                 openAdd:false,
                 ordertypeData:[],
+                initList:{}
             }
         },
         components:{
@@ -144,7 +163,7 @@
 
             this.getfreeList()
             this.getOrdertype()
-
+            this.getPlatformAndExpressType()
         },
         mounted() {
         },
@@ -186,6 +205,17 @@
 
                 }
             },
+            async getPlatformAndExpressType(){
+                try{
+                  let data = await platformAndExpressType()
+                  console.log(data,'d2222ata');
+                  this.initList = data
+
+                }catch(error){
+
+                }
+            },
+
             async addData(){
               let addFrom = this.addFrom
               if(addFrom.expressType || addFrom.ordertype || addFrom.platform ){
@@ -205,7 +235,7 @@
               }
             },
             async deled(){
-                 if(this.multipleSelection.length === 0){
+                if(this.multipleSelection.length === 0){
                   return this.$message.error("请选择要删除的数据")
                 }
                 let str = this.multipleSelection+''

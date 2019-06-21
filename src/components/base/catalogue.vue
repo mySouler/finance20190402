@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="department">
-            
+
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
                 <el-form-item label="分类名称">
                     <el-input v-model.trim="formData.cataloguename"></el-input>
@@ -17,7 +17,7 @@
         </div>
         <div class="contentWrap">
 
-        
+
         <div class="openDailog">
             <el-button  size="small" @click="uploadFun(1)" >批量上传</el-button>
             <el-button  size="small" @click="uploadFun(2)" >批量修改</el-button>
@@ -45,19 +45,19 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="usertime" label="操作时间">
-                    
+
                 </el-table-column>
                 <el-table-column prop="username" label="操作人">
-                    
+
                 </el-table-column>
             </el-table>
             <pageTool :pageData="catalogueList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
-            
-            <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
+
+            <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
-        
+
         </div>
     </div>
 </template>
@@ -111,14 +111,14 @@
                     this.multipleSelection.push( `'${v.serial}'`)
                 })
 				console.log("TCL: handleSelectionChange -> this.multipleSelection", this.multipleSelection)
-                
+
             },
             getPage(val){
                 console.log(val,'getPage');
                 this.pageData.current = val
                 // this.getCatalogueList()
                 this.search()
-                
+
             },
             getSize(val){
                 console.log(val,'getSize');
@@ -147,7 +147,7 @@
                 this.$common.downloadExcl_get("api/Catalogue/export",params,"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
             },
             async getCatalogueList(){
-				
+
                 let arg = Object.assign({},this.pageData,this.formData)
                 try{
                     let data = await finance_catalogueList(arg);

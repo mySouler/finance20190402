@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="department">
-            
+
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
                 <el-form-item label="店铺名称">
                     <el-input v-model.trim="formData.name"></el-input>
@@ -90,8 +90,8 @@
                 <el-table-column prop="remark" label="备注"></el-table-column>
             </el-table>
             <pageTool :pageData="shopData"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
-            
-            <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
+
+            <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
             </downUp>
 
@@ -162,7 +162,7 @@
                     this.multipleSelection.push( `'${v.shopid}'`)
                 })
 				console.log("TCL: handleSelectionChange -> this.multipleSelection", val,this.multipleSelection)
-                
+
             },
             getPage(val){
                 console.log(val,'getPage');
@@ -179,7 +179,7 @@
                 try{
                     let data = await finance_shopSearch(arg);
                     console.log(data,'shopgroupInfo')
-                    
+
                     this.shopData = {}
                     this.shopData = data
                 }catch(err){
@@ -191,14 +191,14 @@
                 let params = Object.assign({},this.formData,{shopid:str})
                 this.$common.downloadExcl_get("api/Shop/export",params,"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
             },
-            
+
             getTime(date){ //获取时间格式
                 console.log(date,'time')
                 if(date){
                 return date[0]+'*'+date[1]
                 }
             },
-            
+
             resetForm: function () { // 清空表单条件
                 for (let key in this.formData) {
                 this.formData[key] = ''

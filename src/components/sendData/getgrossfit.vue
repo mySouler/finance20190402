@@ -34,7 +34,7 @@
             </el-table>
             <pageTool :pageData="inventLists"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
-            <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>

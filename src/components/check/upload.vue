@@ -9,7 +9,7 @@
           <el-input v-model.trim="formData.uploadFileName"></el-input>
         </el-form-item>
         <el-form-item label="上传时间">
-          <el-date-picker v-model="formData.userTime"  value-format="yyyy-MM-dd HH:mm:ss" type="datetime">
+          <el-date-picker v-model="formData.userTime"  value-format="yyyy-MM-dd" type="date">
           </el-date-picker>
         </el-form-item>
         <el-form-item>
@@ -59,7 +59,7 @@
             </el-table>
             <pageTool :pageData="shipmentBillData"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
-            <downUp  :propData="sendData" @successInfo="callBack" :centerDialogVisible.sync="visible"  >
+            <downUp v-if="visible" :propData="sendData" @successInfo="callBack" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>

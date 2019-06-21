@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="department">
-            
+
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
                 <el-form-item label="收款账号">
                     <el-input v-model.trim="formData.name"></el-input>
@@ -77,13 +77,13 @@
                         </div>
                     </template>
                 </el-table-column>
-                
-        
+
+
                 <el-table-column prop="username" label="操作人">
-                    
+
                 </el-table-column>
                 <el-table-column prop="usertime" label="操作时间">
-                    
+
                 </el-table-column>
                 <el-table-column    label="操作">
                     <template slot-scope="scope" >
@@ -94,7 +94,7 @@
                 </el-table-column>
             </el-table>
             <pageTool :pageData="paypalAccountList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
-            <downUp   :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp  v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -106,7 +106,7 @@
             width="25%"
             center>
             <el-form :inline="true" :model="editData" :rules="rules" ref="ruleForm" class="demo-form-inline addDiolog text-left el-dialog--center" label-width="110px">
-                
+
                 <el-form-item label="收款账号" prop="name" >
                     <el-input disabled  v-model.trim="editData.name" ></el-input>
                 </el-form-item>
@@ -123,7 +123,7 @@
                     <el-input v-model.trim="editData.email" ></el-input>
                 </el-form-item>
                 <el-form-item  label="注册日期" prop="regTime"   >
-                    
+
                     <el-date-picker
                     v-model="editData.regTime"
                     :picker-options="pickerOptions"
@@ -208,11 +208,11 @@
                     ],
                     flag: [
                         { required: true, message: '请选择',  },
-                        
+
                     ],
                     status: [
                         { required: true, message: '请选择',  },
-                        
+
                     ],
                 }
             }
@@ -222,7 +222,7 @@
             this.paypalAccount();
             //this.selectByPrimaryKey()
         },
-        
+
         mounted() {
         },
         methods: {
@@ -234,13 +234,13 @@
             },
             async paypalAccount(){
                 let arg = Object.assign({},this.pageData,this.formData)
-                
+
                 try{
                     let data = await finance_paypalAccountlist(arg)
                     console.log(data,'params====data')
                     if(data.success){
                         this.paypalAccountList = data.result
-                        
+
                     }else{
 
                     }
@@ -254,7 +254,7 @@
                     this.multipleSelection.push( v.id)
                 })
 				console.log("TCL: handleSelectionChange -> this.multipleSelection", val,this.multipleSelection)
-                
+
             },
             getPage(val){
                 console.log(val,'getPage');
@@ -272,16 +272,16 @@
             uploadFun(val){
                 this.sendData.downPath = "api/paypalAccount/downloadAccountTemplate"
                 this.sendData.downName = "accountTemplate"
-                
+
                 if(val == 1){
                     this.sendData.sendtype = 1
                     this.sendData.title = "批量上传"
                     this.sendData.url = "api/paypalAccount/import"
-                    this.sendData.type="post" 
+                    this.sendData.type="post"
                 }else{
                     this.sendData.title = "批量修改"
                     this.sendData.url = "api/paypalAccount/batchChange"
-                    this.sendData.type="put" 
+                    this.sendData.type="put"
 
                 }
                 this.visible=true
@@ -290,7 +290,7 @@
 				console.log("TCL: edit -> val", val)
                 this.openEdit = true
                 this.editData = Object.assign({},val)
-                
+
                 try{
                     let data = await finance_payselectByPrimaryKey()
 					console.log("TCL: selectByPrimaryKey -> data", data)
@@ -298,8 +298,8 @@
                 }catch(e){
                     console.log(e)
                 }
-                
-                
+
+
             },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
@@ -317,7 +317,7 @@
                                 copyObj.regTime = ''
                             }
 							console.log("TCL: updateData -> date", copyObj)
-                            
+
                         try{
                             let data = await finance_editAccount(copyObj)
                             console.log(data,'增加')
@@ -326,14 +326,14 @@
                                 this.$message({
                                     type: 'success',
                                     message: data.message
-                                }); 
+                                });
                                 this.openEdit = false
                             }else{
 
                             }
                         }catch(err){
                             console.log(err)
-                            
+
                         }
                     } else {
                         console.log('error submit!!');
@@ -345,9 +345,9 @@
                 try{
                     let data = await finance_payselectByPrimaryKey()
 					console.log("TCL: selectByPrimaryKey -> data", data)
-                    
+
                     if(data.success){
-                        
+
                     }else{
 
                     }
@@ -363,10 +363,10 @@
                 let params =''
                 let ids = {ids:str}
                 str.length == 0 ? '' : params = Object.assign({},ids)
-                
+
 				console.log("TCL: down -> params", params)
                 this.$common.downloadExcl_post("api/paypalAccount/export",params,"accountTemplate",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
-                
+
             },
 
             resetForm: function () { // 清空表单条件
@@ -406,5 +406,5 @@
             width:220px;
         >>>.Api
             margin-bottom 0
-            
+
 </style>

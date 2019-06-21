@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="department">
-            
+
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
                 <el-form-item label="平台">
                     <el-input v-model.trim="formData.ptName"></el-input>
@@ -33,7 +33,7 @@
                 </el-table-column>
                 <el-table-column prop="collectionTool" label="收款工具"></el-table-column>
                 <el-table-column prop="ptDescr" label="备注"></el-table-column>
-                
+
                 <el-table-column prop="fundRate" label="资金费率">
                     <template slot-scope="scope" >
                         <div >
@@ -49,11 +49,11 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="usertime" label="操作时间">
-                    
+
                 </el-table-column>
             </el-table>
             <pageTool :pageData="platData"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
-            <downUp  :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -65,7 +65,7 @@
     import pageTool from "@/components/commonTool/pageTool";
     import downUp from "@/components/commonTool/down_up_xlsx";
 
-    
+
     export default {
         data() {
             return {
@@ -104,7 +104,7 @@
                 this.currentRow = val;
             },
             handleSelectionChange(){
-                
+
             },
             getPage(val){
                 console.log(val,'getPage');
@@ -136,7 +136,7 @@
                     this.multipleSelection.push( `'${v.ptId}'`)
                 })
 				console.log("TCL: handleSelectionChange -> this.multipleSelection", this.multipleSelection)
-                
+
             },
             down(){
                 let str = this.multipleSelection+''
@@ -150,7 +150,7 @@
                     this.platData = data
                 }catch(err){
 					console.log("TCL: finance_platformSearch -> err", err)
-                    
+
                 }
             },
             resetForm: function () { // 清空表单条件

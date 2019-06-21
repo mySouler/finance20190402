@@ -140,10 +140,6 @@
                       <el-checkbox-group    v-model="expressType" >
                         <el-checkbox v-for="(item,index) in searchData.expressTypeList" :label="item" :key="index">{{item}}</el-checkbox>
                       </el-checkbox-group>
-                      <!-- <p v-if="searchData.expressTypeList.length === 0">
-                          请选择承运商
-                          :class="{'noData':searchData.expressTypeList.length === 0}"
-                      </p> -->
                       <span v-if="openTag" @click="toggle(0,'expressTag')">{{expressTag}}</span>
                     </el-form-item>
                   </el-col>
@@ -151,17 +147,7 @@
 
             </el-form>
         </div>
-
-
-        <!-- <div class="myDialog jurisBox" >
-          <el-dialog  :visible.sync="openDailog"   width="36%" center>
-              <span slot="footer" class="dialog-footer">
-                  <el-button  @click="openDailog=false">取 消</el-button>
-                  <el-button >确定</el-button>
-              </span>
-          </el-dialog>
-        </div> -->
-        <downUp  :propData="sendData"  :centerDialogVisible.sync="visible"  >
+        <downUp  v-if="visible" :propData="sendData"  :centerDialogVisible.sync="visible"  >
             <strong>{{fileName}}</strong>
         </downUp>
     </div>

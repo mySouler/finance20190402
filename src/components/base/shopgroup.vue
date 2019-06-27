@@ -43,7 +43,7 @@
             </el-table>
             <pageTool :pageData="shopgroupData"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
         </div>
-        <downUp v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible"  >
+        <downUp v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible"  @successInfo="uploadData" >
             <strong>{{fileName}}</strong>
         </downUp>
     </div>
@@ -114,6 +114,13 @@
                 console.log(val,'getSize');
                 this.pageData.size = val
                 this.onSubmit()
+            },
+            uploadData(val){
+              console.log('object', val)
+              if(val){
+                this.onSubmit()
+
+              }
             },
                // 上传函数
             uploadFun(val){

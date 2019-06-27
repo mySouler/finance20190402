@@ -18,7 +18,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="操作时间">
-                    <el-date-picker v-model="formData.handleTime"  value-format="yyyy-MM-dd" type="date"></el-date-picker>
+                    <el-date-picker v-model="formData.date" value-format="yyyy-MM-dd" type="daterange"></el-date-picker>
                 </el-form-item>
 
                 <el-form-item>
@@ -54,7 +54,7 @@
             </el-table>
             <pageTool :pageData="headList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
-            <downUp v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible" @successInfo="uploadData"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -135,6 +135,13 @@
                 this.pageData.size = val
                 this.getHeadConfigList();
             },
+            uploadData(val){
+              console.log('object', val)
+              if(val){
+                this.getHeadConfigList()
+
+              }
+            },
               // 上传函数
             uploadFun(val){
                 this.sendData.downPath = "api/headConfig/downloadHeadConfigTemplate"
@@ -195,12 +202,22 @@
                 let newObj = Object.assign({},this.formData)
 
                 newObj.type?newObj.type =newObj.type.key:""
+
+                console.log('object :', newObj);
+                if(newObj.date&&newObj.date.length){
+                  newObj.startTime = newObj.date[0]
+                  newObj.endTime   = newObj.date[1]
+                  delete newObj.date
+                }
+
                 let arg = Object.assign({},this.pageData,newObj)
                 try{
                     let data = await headConfigList(arg);
                     console.log("data ====",data)
                     if(data.success){
                         this.headList = data.result
+                    }else{
+                      this.$message.error(data.message)
                     }
                 }catch(err){
                     console.log(err)

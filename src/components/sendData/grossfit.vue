@@ -112,7 +112,7 @@
             </el-table>
             <pageTool :pageData="configList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
-            <downUp v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible"  @successInfo="uploadData" >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -183,6 +183,13 @@
                 this.pageData.size = val
                 this.getConfigListpage();
 
+            },
+            uploadData(val){
+              console.log('object', val)
+              if(val){
+                this.getConfigListpage()
+
+              }
             },
               // 上传函数
             uploadFun(val){

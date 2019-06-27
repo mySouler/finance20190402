@@ -94,7 +94,7 @@
                 </el-table-column>
             </el-table>
             <pageTool :pageData="paypalAccountList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
-            <downUp  v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp  v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible" @successInfo="uploadData"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -267,6 +267,13 @@
                 this.pageData.size = val
                 let data = Object.assign({},this.formData,this.pageData)
                 this.paypalAccount()
+            },
+            uploadData(val){
+              console.log('object', val)
+              if(val){
+                this.paypalAccount()
+
+              }
             },
                // 上传函数
             uploadFun(val){

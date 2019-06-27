@@ -53,7 +53,7 @@
             </el-table>
             <pageTool :pageData="catalogueList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
-            <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible" @successInfo="uploadData" >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -98,7 +98,6 @@
             downUp
         },
         created() {
-            // this.getCatalogueList();
             this.search()
 
         },
@@ -113,17 +112,16 @@
 				console.log("TCL: handleSelectionChange -> this.multipleSelection", this.multipleSelection)
 
             },
+
             getPage(val){
                 console.log(val,'getPage');
                 this.pageData.current = val
-                // this.getCatalogueList()
                 this.search()
 
             },
             getSize(val){
                 console.log(val,'getSize');
                 this.pageData.size = val
-                // this.getCatalogueList()
                 this.search()
             },
               // 上传函数
@@ -140,25 +138,20 @@
                 }
                 this.visible=true
             },
+            uploadData(val){
+              console.log('object', val)
+              if(val){
+                this.search()
+
+              }
+            },
             down(){
                 let str = this.multipleSelection+''
                 let params = Object.assign({},this.formData,{serial:str})
                 console.log("TCL: down -> params", params)
                 this.$common.downloadExcl_get("api/Catalogue/export",params,"下载",this.$loading({text:"正在下载",spinner:"el-icon-loading",background:"rgba(0, 0, 0, 0.8)"}))
             },
-            async getCatalogueList(){
 
-                let arg = Object.assign({},this.pageData,this.formData)
-                try{
-                    let data = await finance_catalogueList(arg);
-                    console.log("data ====",data)
-                    if(data.success){
-                        this.catalogueList = data.result
-                    }
-                }catch(err){
-                    console.log(err)
-                }
-            },
             async search(){
                 // let params = this.formData
                 let params = Object.assign({},this.pageData,this.formData)

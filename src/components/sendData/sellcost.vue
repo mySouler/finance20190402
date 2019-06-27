@@ -55,7 +55,7 @@
             </el-table>
             <pageTool :pageData="configList"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
-            <downUp  v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp  v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible" @successInfo="uploadData"   >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -117,6 +117,13 @@
         mounted() {
         },
         methods: {
+            uploadData(val){
+              console.log('object', val)
+              if(val){
+                this.getconfigListpage()
+
+              }
+            },
             handleSelectionChange(val){
                 this.multipleSelection=[]
                 val.map((v)=>{

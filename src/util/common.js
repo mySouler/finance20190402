@@ -29,17 +29,17 @@ common.downloadExcl_post = function (url, data, name, loading) {
 common.downloadExcl_get = function (url, data, name, loading) {
     let fileName = name
     axios.get(url, {params:data,responseType:"blob"}).then((res) => {
-          let blob = new Blob([res], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-          if (window.navigator.msSaveOrOpenBlob) {
-              navigator.msSaveBlob(blob, fileName);
-          } else {
-              var link = document.createElement('a');
-              link.href = window.URL.createObjectURL(blob);
-              link.download = fileName;
-              link.click();
-              window.URL.revokeObjectURL(link.href);
-          }
-          loading.close();
+        let blob = new Blob([res], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+        if (window.navigator.msSaveOrOpenBlob) {
+            navigator.msSaveBlob(blob, fileName);
+        } else {
+            var link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = fileName;
+            link.click();
+            window.URL.revokeObjectURL(link.href);
+        }
+        loading.close();
 
          //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet这里表示xlsx类型
     　

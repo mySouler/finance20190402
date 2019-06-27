@@ -33,8 +33,8 @@
         </div>
         <div class="item orderTable  bgc_white mt_20">
             <el-table stripe :data="smtLists.records"  style="width: 100%;" highlight-current-row
-                border @selection-change="handleSelectionChange">
-                <el-table-column   type="selection"      width="50"> </el-table-column>
+                border >
+
                 <el-table-column prop="groupId" label="批次号"></el-table-column>
                 <el-table-column prop="fileName" label="上传文件名"></el-table-column>
                 <el-table-column prop="userName" label="上传人"></el-table-column>
@@ -59,7 +59,7 @@
             </el-table>
             <pageTool :pageData="smtLists"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
-            <downUp v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp v-if="visible"  :propData="sendData" :centerDialogVisible.sync="visible"   @successInfo="uploadData" >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -116,32 +116,30 @@
         },
         methods: {
             async operation(val,arg){
+                let obj ={}
                 if(arg){
                   this.openDailog = true
-                }
-                let obj ={}
-                obj.groupId = val.groupId
-                try{
 
-                  let data = await smtExpressDetail(obj)
-                  console.log("TCL: operation -> data", data)
-                  if(data.success){
-                    this.smtListChilds = data.result
-                    if(!arg){
-                      let id = data.result.map((res)=>
-                        res.groupId
-                      )
-                      obj = {}
-                      obj.groupId = id + ""
-                      this.down(obj)
+
+                  obj.groupId = val.groupId
+                  try{
+
+                    let data = await smtExpressDetail(obj)
+                    console.log("TCL: operation -> data", data)
+                    if(data.success){
+                      this.smtListChilds = data.result
+
+                    }else{
+                      this.$message.error(data.message)
                     }
-                  }else{
-                    this.$message.error(data.message)
+                  }catch(error){
+                    console.log("TCL: operation -> error", error)
                   }
-                }catch(error){
-                  console.log("TCL: operation -> error", error)
+                }else{
+                  obj = {}
+                  obj.groupId = val.groupId
+                  this.down(obj)
                 }
-
 
             },
             handleSelectionChange(val){
@@ -163,6 +161,13 @@
                 console.log(val,'getSize');
                 this.pageData.size = val
                 this.getSmtLists();
+            },
+            uploadData(val){
+              console.log('object', val)
+              if(val){
+                this.getSmtLists()
+
+              }
             },
               // 上传函数
             uploadFun(val){

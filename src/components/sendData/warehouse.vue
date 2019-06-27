@@ -8,7 +8,7 @@
                 </el-form-item>
 
                 <el-form-item label="时间">
-                  <el-date-picker v-model="formData.times"  value-format="yyyy-MM-dd" type="date"></el-date-picker>
+                  <el-date-picker v-model="formData.times"  value-format="yyyy-MM-dd" type="daterange"></el-date-picker>
                 </el-form-item>
 
                 <el-form-item>
@@ -76,7 +76,7 @@
             </el-table>
             <pageTool :pageData="inventLists"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
 
-            <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible" @successInfo="uploadData" >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -146,6 +146,14 @@
                 this.pageData.size = val
                 this.getInventList()
             },
+
+            uploadData(val){
+              console.log('object', val)
+              if(val){
+                this.getInventList()
+
+              }
+            },
               // 上传函数
             uploadFun(val){
                 this.sendData.downPath = "api/inventoryCost/downloadInventoryCostConfigTemplate"
@@ -201,6 +209,11 @@
                 let newObj = Object.assign({},this.formData)
 
                 newObj.type?newObj.type =newObj.type.key:""
+                if(newObj.times&&newObj.times.length){
+                  newObj.startTime = newObj.times[0]
+                  newObj.endTime   = newObj.times[1]
+                  delete newObj.times
+                }
                 let arg = Object.assign({},this.pageData,newObj)
                 try{
                     let data = await inventList(arg);

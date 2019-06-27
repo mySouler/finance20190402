@@ -93,10 +93,19 @@
       getPage(val) {
         console.log(val, 'getPage');
         this.pageData.current = val
+        this.roleInfo()
       },
       getSize(val) {
         console.log(val, 'getSize');
         this.pageData.size = val
+        this.roleInfo()
+      },
+      uploadData(val){
+        console.log('object', val)
+        if(val){
+          this.roleInfo()
+
+        }
       },
       rolePower(data){
         this.openPower = true

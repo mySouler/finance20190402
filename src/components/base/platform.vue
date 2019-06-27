@@ -53,7 +53,7 @@
                 </el-table-column>
             </el-table>
             <pageTool :pageData="platData"  @sizeChange="getSize" @pageChange="getPage" ></pageTool>
-            <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible"  >
+            <downUp v-if="visible" :propData="sendData" :centerDialogVisible.sync="visible" @successInfo="uploadData"  >
                 <strong>{{fileName}}</strong>
             </downUp>
         </div>
@@ -116,6 +116,13 @@
                 this.pageData.size = val
                 this.search()
             },
+            uploadData(val){
+              console.log('object', val)
+              if(val){
+                this.search()
+
+              }
+            },
                // 上传函数
             uploadFun(val){
                 this.sendData.downPath = "api/Platform/model"
@@ -149,7 +156,7 @@
                     let data = await finance_platformSearch(params)
                     this.platData = data
                 }catch(err){
-					console.log("TCL: finance_platformSearch -> err", err)
+                  console.log("TCL: finance_platformSearch -> err", err)
 
                 }
             },

@@ -97,12 +97,20 @@
                 this.$http[this.type](this.url,param, config).then((res) => {
                     console.log(res,'resresresres');
                     if (res.code == 200) {
-                        this.$message.success(res.message)
+                        this.$message.success({
+                          message:res.message,
+                          duration:6000
+                        })
 
                     } else {
-                        this.$message.error(res.message)
+                        this.$message.error(
+                          {
+                            message:res.message,
+                            duration:6000
+                          }
+                        )
                     }
-                    that.$emit("successInfo",res.message)
+                    that.$emit("successInfo",res.success)
                     setTimeout(()=>{
                         this.switchStatus = false
                     },1000)

@@ -49,11 +49,15 @@
         <el-dialog
         :title="title"
         :visible.sync="add"
+        @close="closeHandle"
         width="20%"
         center>
             <el-form :inline="true" :model="roleInfo" :rules="rules" ref="ruleForm" class="demo-form-inline roleDiolog" label-width="110px">
                 <el-form-item label="用户名" prop="username">
                     <el-input  v-model.trim="roleInfo.username" ></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="username">
+                    <el-input type="password" v-model.trim="roleInfo.password" ></el-input>
                 </el-form-item>
                 <el-form-item label="部门"  prop="department" >
                     <el-select v-model="roleInfo.department" placeholder="请选择">
@@ -291,6 +295,9 @@
         } catch (err) {
           console.log("TCL: userDepart -> err", err)
         }
+      },
+      closeHandle(){
+        this.$refs["ruleForm"].resetFields();
       },
       resetForm: function() { // 清空表单条件
         for (let key in this.formData) {

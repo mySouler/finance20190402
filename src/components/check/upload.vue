@@ -9,7 +9,7 @@
           <el-input v-model.trim="formData.uploadFileName"></el-input>
         </el-form-item>
         <el-form-item label="上传时间">
-          <el-date-picker v-model="formData.userTime"  value-format="yyyy-MM-dd" type="date">
+          <el-date-picker v-model="formData.userTime"  value-format="yyyy-MM-dd" type="daterange">
           </el-date-picker>
         </el-form-item>
         <el-form-item>
@@ -156,6 +156,7 @@
         this.getShipmentBillLists()
 
       },
+
       // 上传函数
       uploadFun(val) {
         this.sendData.downPath = "api/shipmentBill/downloadShipmentBillUploadTemplate"
@@ -168,8 +169,7 @@
         console.log("TCL: callBack -> val", val)
         setTimeout(() => {
           this.getShipmentBillLists()
-
-        }, 1300);
+        }, 300);
 
       },
       async deled() {
@@ -207,7 +207,13 @@
       async getShipmentBillLists() {
         let newObj = Object.assign({}, this.formData)
         newObj.type ? newObj.type = newObj.type.key : ""
+        if(newObj.userTime&&newObj.userTime.length){
+          newObj.startTime = newObj.userTime[0]
+          newObj.endTime   = newObj.userTime[1]
+          delete newObj.userTime
+        }
         let arg = Object.assign({}, this.pageData, newObj)
+
         console.log("TCL: getShipmentBillLists -> arg", arg)
         try {
           let data = await shipmentBillLists(arg);

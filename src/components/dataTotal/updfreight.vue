@@ -32,7 +32,7 @@
             <el-button  size="small" @click="deled" >删除</el-button>
         </div>
         <div class="item orderTable  bgc_white mt_20">
-            <el-table stripe :data="smtLists.records"  style="width: 100%;" highlight-current-row
+            <el-table stripe :data="smtLists.records" style="width: 100%;" highlight-current-row
                 border >
 
                 <el-table-column prop="groupId" label="批次号"></el-table-column>
@@ -65,13 +65,17 @@
         </div>
         </div>
         <div class="myDialog jurisBox" >
-          <el-dialog  title="查看" :visible.sync="openDailog"   width="36%" center>
-              <el-table stripe :data="smtListChilds"  style="width: 100%;" highlight-current-row
+          <el-dialog  title="查看" :visible.sync="openDailog"  width="42%" center>
+              <el-table stripe :data="smtListChilds" height="480"   style="width: 100%;" highlight-current-row
                 border >
                 <el-table-column prop="expressId" label="订单号/运单号"></el-table-column>
                 <el-table-column prop="expressFree" label="运费"></el-table-column>
                 <el-table-column prop="weight" label="账单重量"></el-table-column>
             </el-table>
+            <!-- <pageTool :pageData="pageInit"  @pageChange="DialogPage" ></pageTool> -->
+            <el-pagination v-if="smtListChilds.length"   @current-change="DialogPage"  :page-sizes="[30]"  :total="pageInit.total" layout="total, sizes, prev, pager, next, jumper">
+            </el-pagination>
+
           </el-dialog>
         </div>
     </div>
@@ -83,6 +87,11 @@
     export default {
         data() {
             return {
+                pageInit:{
+                  records:[],
+                  pageOn:1,
+                  total:0,
+                },
                 openDailog:false,
                 formData:{ },
                 pageData:{
@@ -100,7 +109,9 @@
                 },
                 visible:false,
                 fileName:"SMT上传.xls",
-                multipleSelection:[]
+                multipleSelection:[],
+                oldList:[],
+                pageTotal:[0,30]
             }
         },
         components:{
@@ -112,14 +123,18 @@
             this.getSmtLists()
 
         },
+        computed:{
+
+        },
         mounted() {
         },
         methods: {
             async operation(val,arg){
                 let obj ={}
+
+                this.smtListChilds = []
                 if(arg){
                   this.openDailog = true
-
 
                   obj.groupId = val.groupId
                   try{
@@ -127,8 +142,12 @@
                     let data = await smtExpressDetail(obj)
                     console.log("TCL: operation -> data", data)
                     if(data.success){
-                      this.smtListChilds = data.result
+                      let page = this.pageTotal
+                      this.oldList = data.result
 
+                      this.pageInit.total = data.result.length
+                      this.smtListChilds = data.result.slice(page[0],page[1])
+                      this.pageInit.records = this.smtListChilds
                     }else{
                       this.$message.error(data.message)
                     }
@@ -162,6 +181,15 @@
                 this.pageData.size = val
                 this.getSmtLists();
             },
+            DialogPage(val){
+                console.log(val,'getPage');
+                let page = this.pageTotal
+                page[0] = (val-1)*30
+                page[1] = (val)*30
+                this.smtListChilds = this.oldList.slice(page[0],page[1])
+            },
+
+
             uploadData(val){
               console.log('object', val)
               if(val){
@@ -247,9 +275,17 @@
         },
         beforeDestory() {
         },
-        computed: {
-        },
+
         watch: {
+          openDailog(val){
+            if(!val){
+              this.pageInit.records = []
+              this.pageInit.pageOn = 1
+              this.pageInit.total = 0
+              this.pageTotal[0] = 0
+              this.pageTotal[1] = 30
+            }
+          }
         }
     }
 </script>
@@ -273,4 +309,12 @@
     .jurisBox
         >>>.el-dialog__header
               display none
+
+        >>>.el-table td, .el-table th
+            padding:8px 0
+        >>>.el-pagination
+            text-align center
+            padding-top:16px;
+        // >>>.el-pagination__sizes
+        //     // display none
 </style>

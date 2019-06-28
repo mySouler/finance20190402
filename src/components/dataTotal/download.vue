@@ -27,6 +27,7 @@
                     <el-select
                         v-model="formData.orderType"
                         multiple
+                        filterable
                         placeholder="请选择">
                         <el-option
                           v-for="(item,index) in searchData.orderTypeList"

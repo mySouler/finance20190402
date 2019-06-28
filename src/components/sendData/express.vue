@@ -13,6 +13,7 @@
                 <el-form-item label="订单属性">
                       <el-select
                         v-model="formData.ordertype"
+                        filterable
                         placeholder="请选择">
                         <el-option
                           v-for="(item,index) in ordertypeData"

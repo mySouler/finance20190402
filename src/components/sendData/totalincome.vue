@@ -3,11 +3,10 @@
         <div class="department">
 
             <el-form :inline="true" :model="formData" class="rightPanel demo-form-inline text-left" label-width="100px">
-
-
                 <el-form-item label="订单属性">
                     <el-select
                         v-model="formData.ordertype"
+                        filterable
                         placeholder="请选择">
                         <el-option
                           v-for="(item,index) in ordertypeData"

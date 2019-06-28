@@ -6,7 +6,7 @@
           <el-tree :data="powerList"
             show-checkbox
             :expand-on-click-node="true"
-            :check-on-click-node="true"
+
             :default-expanded-keys="defaultChoose"
             :default-checked-keys="allKey"
             node-key="id"
@@ -101,11 +101,19 @@
         })
         console.log("TCL: updateData -> chooseData updateData",this.allCheckData)
         console.log("TCL: updateData -> chooseData updateData chooseData + ''",this.allCheckData + '')
+        let strArray = this.allCheckData + ''
+        let permissionIds = ''
+        if(strArray.length){
+          let newArray = strArray.split(',')
+          permissionIds = [...new Set(newArray)]
+          console.log(permissionIds,'permissionIds');
+
+        }
 
         try {
           let params = {}
           params[this.type] = this.id
-          params.permissionIds = this.allCheckData + ''
+          params.permissionIds = permissionIds + ''
           let data = await this.updataUrl(params)
           if (data.success) {
             this.$message.success(data.message)
